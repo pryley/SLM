@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -93,7 +94,7 @@ class License extends Model
 	 */
 	public function hasDomain( $domain )
 	{
-		return $this->domains()->where( 'domain', $domain )->firstOrFail();
+		return $this->domains()->where( 'domain', $domain )->first();
 	}
 
 	/**
@@ -103,6 +104,6 @@ class License extends Model
 	 */
 	public function hasExpired()
 	{
-		return Carbon::now()->subWeek()->gte( $this->expires_at );
+		return Carbon::now()->subWeek()->gte( Carbon::parse( $this->expires_at ));
 	}
 }

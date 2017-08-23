@@ -3,14 +3,19 @@
 namespace App;
 
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Lumen\Auth\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Lumen\Auth\Authorizable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-	use Authenticatable, Authorizable;
+	use Authenticatable, Authorizable, HasApiTokens, SoftDeletes;
+
+	const ADMIN_ROLE = 'ADMIN_USER';
+	const BASIC_ROLE = 'BASIC_USER';
 
 	/**
 	 * The attributes that are mass assignable.
@@ -18,8 +23,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	 * @var array
 	 */
 	protected $fillable = [
+		'uid',
 		'name',
 		'email',
+		'password',
+		'role',
+		'is_active',
 	];
 
 	/**
@@ -28,7 +37,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	 * @var array
 	 */
 	protected $hidden = [
-		'api_token',
 		'password',
 	];
 
@@ -36,7 +44,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	 * @var array
 	 */
 	protected $rules = [
-		'email' => 'required|email',
-		'name' => 'required',
+		'email' => 'required|email|unique:users',
+		'name' => 'required|max:50',
+		'password' => 'min:8',
 	];
 }

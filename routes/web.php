@@ -36,4 +36,6 @@ $app->group( ['prefix' => 'v1'], function() use( $app ) {
 		$app->get( 'domains', 'DomainController@index' );
 		$app->post( 'domains', 'DomainController@store' );
 	});
+	// oauth2 routes
+	\Dusterio\LumenPassport\LumenPassport::routes( $app, ['prefix' => 'oauth'] );
 });

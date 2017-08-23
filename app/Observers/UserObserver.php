@@ -24,7 +24,6 @@ class UserObserver
 	 */
 	public function created( User $user )
 	{
-		\Log::debug( 'User created' );
 	}
 
 	/**
@@ -32,8 +31,8 @@ class UserObserver
 	 */
 	public function creating( User $user )
 	{
+		$user->password = app( 'hash' )->make( $user->password );
 		$user->uid = Uuid::uuid4()->toString();
-		$user->password = Hash::make( $user->password );
 	}
 
 	/**
@@ -41,7 +40,6 @@ class UserObserver
 	 */
 	public function deleted( User $user )
 	{
-		\Log::debug( 'User deleted' );
 	}
 
 	/**
@@ -50,7 +48,7 @@ class UserObserver
 	public function updating( User $user )
 	{
 		if( $this->request->input( 'password' )) {
-			$user->password = Hash::make( $this->request->input( 'password' ));
+			$user->password = app( 'hash' )->make( $this->request->input( 'password' ));
 		}
 	}
 }

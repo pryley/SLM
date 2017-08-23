@@ -13,13 +13,13 @@ class CreateDomainsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('domains', function (Blueprint $table) {
-			$table->increments('id');
-			$table->integer('license_id')->unsigned();
-			$table->string('domain');
+		Schema::create( 'domains', function( Blueprint $table ) {
+			$table->increments( 'id' );
+			$table->integer( 'license_id' )->unsigned();
+			$table->string( 'domain' );
 			$table->timestamps();
 
-			$table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
+			$table->foreign( 'license_id' )->references( 'id' )->on( 'licenses' )->onDelete( 'cascade' );
 		});
 	}
 
@@ -30,6 +30,6 @@ class CreateDomainsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('domains');
+		Schema::dropIfExists( 'domains' );
 	}
 }

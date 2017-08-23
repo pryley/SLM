@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Domain;
 use App\License;
+use App\User;
 use App\Observers\DomainObserver;
 use App\Observers\LicenseObserver;
 use App\Observers\UserObserver;

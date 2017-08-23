@@ -102,8 +102,6 @@ class LicenseController extends Controller
 	 */
 	public function verify( Request $request )
 	{
-		// \Log::debug( $request->ip() );
-		// \Log::debug( $request->getHost() );
 		$license = $this->getLicense( $request->input( 'license_key' ));
 		if( $license->hasExpired() ) {
 			$license->status = 'inactive';

@@ -13,12 +13,16 @@ class CreateUsersTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('users', function (Blueprint $table) {
-			$table->increments('id');
-			$table->string('name');
-			$table->string('email')->unique();
-			$table->string('api_token', 60)->unique();
+		Schema::create( 'users', function( Blueprint $table ) {
+			$table->increments( 'id' );
+			$table->uuid( 'uid' )->unique()->index();
+			$table->string( 'username' );
+			$table->string( 'email' )->unique();
+            $table->string( 'password' )->nullable();
+			$table->enum( 'role', ['BASIC_USER', 'ADMIN_USER'] )->default( 'BASIC_USER' );
+			$table->tinyInteger( 'is_active' );
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 
@@ -29,6 +33,6 @@ class CreateUsersTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('users');
+		Schema::dropIfExists( 'users' );
 	}
 }

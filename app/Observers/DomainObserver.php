@@ -11,7 +11,6 @@ class DomainObserver
 	 */
 	public function created( Domain $domain )
 	{
-		\Log::debug( 'Domain created' );
 	}
 
 	/**
@@ -19,6 +18,5 @@ class DomainObserver
 	 */
 	public function deleted( Domain $domain )
 	{
-		\Log::debug( 'Domain deleted' );
 	}
 }

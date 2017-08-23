@@ -63,7 +63,7 @@ class ThrottleRequests
     protected function resolveRequestSignature($request)
     {
         return sha1( implode( '|', [
-            $request->server( 'SERVER_NAME' ),
+            $request->getHost(),
             $request->path(),
             $request->ip(),
         ]));
