@@ -22,8 +22,13 @@ $app->group( ['prefix' => 'v1'], function() use( $app ) {
 	$app->group( ['middleware' => 'throttle:20,1'], function() use( $app ) {
 		$app->post( 'licenses/verify', 'LicenseController@verify' );
 	});
+	// oauth2 routes
+	\Dusterio\LumenPassport\LumenPassport::routes( $app, [
+		'prefix' => 'oauth',
+		'middleware' => ['throttle:60,1'],
+	]);
 	// protected routes
-	$app->group( ['middleware' => ['auth:api', 'throttle:60']], function() use( $app ) {
+	$app->group( ['middleware' => ['auth:api', 'throttle:60,1']], function() use( $app ) {
 		// licenses
 		$app->post( 'licenses', 'LicenseController@store' );
 		$app->post( 'licenses/deactivate', 'LicenseController@deactivate' );
@@ -36,6 +41,4 @@ $app->group( ['prefix' => 'v1'], function() use( $app ) {
 		$app->get( 'domains', 'DomainController@index' );
 		$app->post( 'domains', 'DomainController@store' );
 	});
-	// oauth2 routes
-	\Dusterio\LumenPassport\LumenPassport::routes( $app, ['prefix' => 'oauth'] );
 });
