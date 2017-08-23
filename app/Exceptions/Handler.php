@@ -6,6 +6,7 @@ use App\Exceptions\InvalidDomainException;
 use App\Exceptions\InvalidLicenseException;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
@@ -20,11 +21,11 @@ class Handler extends ExceptionHandler
 	 */
 	protected $dontReport = [
 		AuthorizationException::class,
+		InvalidDomainException::class,
+		InvalidLicenseException::class,
 		HttpException::class,
 		ModelNotFoundException::class,
 		ValidationException::class,
-		// InvalidDomainException::class,
-		// InvalidLicenseException::class,
 	];
 
 	/**
@@ -41,41 +42,30 @@ class Handler extends ExceptionHandler
 
 	/**
 	 * Render an exception into an HTTP response.
+	 * http://www.restapitutorial.com/httpstatuscodes.html
 	 *
 	 * @param \Illuminate\Http\Request $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function render( $request, Exception $e )
 	{
+		if( $e instanceof AuthenticationException ) {
+			return response( ['message' => 'Unauthorized', 'status' => 401], 401 );
+		}
 		if( $e instanceof AuthorizationException ) {
-			return response()->json(([
-				'status' => 403,
-				'message' => 'Insufficient privileges to perform this action',
-			]), 403 );
+			return response( ['message' => 'Insufficient privileges to perform this action', 'status' => 403], 403 );
 		}
 		if( $e instanceof InvalidDomainException ) {
-			return response()->json(([
-				'status' => 404,
-				'message' => 'The domain is invalid',
-			]), 404 );
+			return response( ['message' => 'Domain is invalid', 'status' => 401], 401 );
 		}
 		if( $e instanceof InvalidLicenseException ) {
-			return response()->json(([
-				'status' => 404,
-				'message' => 'The license is invalid',
-			]), 404 );
+			return response( ['message' => 'License is invalid', 'status' => 401], 401 );
 		}
 		if( $e instanceof MethodNotAllowedHttpException ) {
-			return response()->json(([
-				'status' => 405,
-				'message' => 'Method Not Allowed',
-			]), 405 );
+			return response( ['message' => 'Method Not Allowed', 'status' => 405], 405 );
 		}
 		if( $e instanceof NotFoundHttpException ) {
-			return response()->json(([
-				'status' => 404,
-				'message' => 'The requested resource was not found',
-			]), 404 );
+			return response( ['message' => 'The requested resource was not found', 'status' => 404], 404 );
 		}
 		return parent::render( $request, $e );
 	}
