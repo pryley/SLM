@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
@@ -24,7 +23,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	 */
 	protected $fillable = [
 		'uid',
-		'name',
+		'username',
 		'email',
 		'password',
 		'role',
@@ -43,9 +42,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	/**
 	 * @var array
 	 */
-	protected $rules = [
+	public $rules = [
 		'email' => 'required|email|unique:users',
-		'name' => 'required|max:50',
+		'username' => 'required|max:50',
 		'password' => 'min:8',
 	];
 }

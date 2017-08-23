@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Domain;
 use App\Exceptions\InvalidDomainException;
+use App\Transformers\DomainTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class DomainController extends Controller
 {
+	public function __construct( DomainTransformer $transformer )
+	{
+		$this->transformer = $transformer;
+		parent::__construct();
+	}
+
 	/**
 	 * @return void
 	 */
@@ -21,15 +28,17 @@ class DomainController extends Controller
 	}
 
 	/**
-	 * @return Collection
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function index( Request $request )
 	{
-		return $this->getLicense( $request->input( 'license_key' ))->domains->pluck( 'domain' );
+		return $this->respondWithArray([
+			'data' => $this->getLicense( $request->input( 'license_key' ))->domains->pluck( 'domain' )->toArray()
+		]);
 	}
 
 	/**
-	 * @return Domain
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function store( Request $request )
 	{
@@ -42,9 +51,9 @@ class DomainController extends Controller
 		if( $license->domains()->count() >= $license->max_domains_allowed ) {
 			throw new InvalidDomainException;
 		}
-		return $domain->create([
+		return $this->respondWithItem( $domain->create([
 			'domain' => $request->input( 'domain' ),
 			'license_id' => $license->id,
-		]);
+		]), $this->transformer );
 	}
 }

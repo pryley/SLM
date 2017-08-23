@@ -5,13 +5,20 @@ namespace App\Http\Controllers;
 use App\Exceptions\InvalidDomainException;
 use App\Exceptions\InvalidLicenseException;
 use App\License;
+use App\Transformers\LicenseTransformer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LicenseController extends Controller
 {
+	public function __construct( LicenseTransformer $transformer )
+	{
+		$this->transformer = $transformer;
+		parent::__construct();
+	}
+
 	/**
-	 * @return array
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function store( Request $request )
 	{
@@ -27,14 +34,11 @@ class LicenseController extends Controller
 			'status' => 'active',
 			'transaction_id' => $request->input( 'transaction_id' ),
 		])->save();
-		return [
-			'license_key' => $license->license_key,
-			'max_domains_allowed' => $license->max_domains_allowed,
-		];
+		return $this->respondWithItem( $license, $this->transformer );
 	}
 
 	/**
-	 * @return License
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function deactivate( Request $request )
 	{
@@ -42,7 +46,7 @@ class LicenseController extends Controller
 			'status' => 'inactive',
 		]);
 		$license->fireEvent( 'deactivated' );
-		return $license;
+		return $this->respondWithItem( $license, $this->transformer );
 	}
 
 	/**
@@ -58,7 +62,7 @@ class LicenseController extends Controller
 	}
 
 	/**
-	 * @return License
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function renew( Request $request )
 	{
@@ -69,11 +73,11 @@ class LicenseController extends Controller
 			'max_domains_allowed' => $request->input( 'max_domains_allowed', null ),
 		]);
 		$license->fireEvent( 'renewed' );
-		return $license;
+		return $this->respondWithItem( $license, $this->transformer );
 	}
 
 	/**
-	 * @return License
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function restore( Request $request )
 	{
@@ -81,11 +85,11 @@ class LicenseController extends Controller
 			'status' => 'active',
 		], true );
 		$license->restore();
-		return $license;
+		return $this->respondWithItem( $license, $this->transformer );
 	}
 
 	/**
-	 * @return License
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function revoke( Request $request )
 	{
@@ -94,11 +98,11 @@ class LicenseController extends Controller
 		]);
 		$license->delete();
 		$license->fireEvent( 'revoked' );
-		return $license;
+		return $this->respondWithItem( $license, $this->transformer );
 	}
 
 	/**
-	 * @return License
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function verify( Request $request )
 	{
@@ -109,10 +113,10 @@ class LicenseController extends Controller
 		if( $license->status != 'active' ) {
 			throw new InvalidLicenseException;
 		}
-		if( !$license->hasDomain( $request->getHost() )) {
-			throw new InvalidDomainException;
-		}
-		return $license;
+		// if( !$license->hasDomain( $request->getHost() )) {
+		// 	throw new InvalidDomainException;
+		// }
+		return $this->respondWithItem( $license, $this->transformer );
 	}
 
 	/**

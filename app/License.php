@@ -3,7 +3,6 @@
 namespace App;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class License extends Model
@@ -75,16 +74,6 @@ class License extends Model
 	public function domains()
 	{
 		return $this->hasMany( Domain::class, 'license_id' );
-	}
-
-	/**
-	 * @param string $event
-	 * @param bool $halt
-	 * @return void
-	 */
-	public function fireEvent( $event, $halt = false )
-	{
-		$this->fireModelEvent( $event, $halt );
 	}
 
 	/**

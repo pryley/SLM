@@ -11,10 +11,7 @@
 |
 */
 
-$app->get( '/', function() use( $app ) {
-	return $app->version();
-});
-
+$app->get( '/', function(){} );
 
 
 $app->group( ['prefix' => 'v1'], function() use( $app ) {
