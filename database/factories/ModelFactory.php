@@ -42,7 +42,6 @@ $factory->define( App\License::class, function( Faker\Generator $faker ) {
  */
 $factory->define( App\User::class, function( Faker\Generator $faker ) {
 	return [
-		'username' => $faker->userName,
 		'email' => $faker->email,
 		'password' => 'password',
 		'role' => \App\User::BASIC_ROLE,
