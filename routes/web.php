@@ -37,5 +37,8 @@ $app->group( ['prefix' => 'v1'], function() use( $app ) {
 		$app->delete( 'domains/{domain}', 'DomainController@destroy' );
 		$app->get( 'domains', 'DomainController@index' );
 		$app->post( 'domains', 'DomainController@store' );
+		// users
+		$app->get( 'users', 'UserController@index' );
+		$app->post( 'users', 'UserController@store' );
 	});
 });

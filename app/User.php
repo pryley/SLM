@@ -44,7 +44,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	 */
 	public $rules = [
 		'email' => 'required|email|unique:users',
+		'is_active' => 'boolean',
+		'password' => 'required|min:8',
 		'username' => 'required|max:50',
-		'password' => 'min:8',
 	];
 }

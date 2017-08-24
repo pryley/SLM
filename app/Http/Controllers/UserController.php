@@ -17,11 +17,23 @@ class UserController extends Controller
 	/**
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function create( Request $request )
+	public function index( Request $request )
+	{
+		return $this->respondWithCollection( app( User::class )->all(), $this->transformer );
+	}
+
+	/**
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function store( Request $request )
 	{
 		$user = app( User::class );
 		$this->validate( $request, $user->rules );
-		$request['api_token'] = str_random( 60 );
-		return $this->respondWithItem( $user->create( $request->all() ), $this->transformer );
+		return $this->respondWithItem( $user->create([
+			'email' =>  $request->input( 'email' ),
+			'username' =>  $request->input( 'username' ),
+			'is_active' => $request->input( 'is_active', 1 ),
+			'role' => $request->input( 'role', User::BASIC_ROLE )
+		]), $this->transformer );
 	}
 }
