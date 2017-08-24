@@ -20,6 +20,14 @@ class LicenseController extends Controller
 	/**
 	 * @return \Illuminate\Http\JsonResponse
 	 */
+	public function index( Request $request )
+	{
+		return $this->respondWithCollection( app( License::class )->all(), $this->transformer );
+	}
+
+	/**
+	 * @return \Illuminate\Http\JsonResponse
+	 */
 	public function store( Request $request )
 	{
 		$license = app( License::class );

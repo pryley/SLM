@@ -27,16 +27,17 @@ $app->group( ['prefix' => 'v1'], function() use( $app ) {
 	// protected routes
 	$app->group( ['middleware' => ['auth:api', 'throttle:60,1']], function() use( $app ) {
 		// licenses
+		$app->get( 'licenses', 'LicenseController@index' );
 		$app->post( 'licenses', 'LicenseController@store' );
 		$app->post( 'licenses/deactivate', 'LicenseController@deactivate' );
-		$app->delete( 'licenses/{license_key}', 'LicenseController@destroy' );
 		$app->post( 'licenses/renew', 'LicenseController@renew' );
 		$app->post( 'licenses/restore', 'LicenseController@restore' );
 		$app->post( 'licenses/revoke', 'LicenseController@revoke' );
+		$app->delete( 'licenses/{license_key}', 'LicenseController@destroy' );
 		// domains
-		$app->delete( 'domains/{domain}', 'DomainController@destroy' );
 		$app->get( 'domains', 'DomainController@index' );
 		$app->post( 'domains', 'DomainController@store' );
+		$app->delete( 'domains/{domain}', 'DomainController@destroy' );
 		// users
 		$app->get( 'users', 'UserController@index' );
 		$app->post( 'users', 'UserController@store' );
