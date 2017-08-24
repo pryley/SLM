@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Domain;
+use App\Exceptions\DomainExistsException;
+use App\Exceptions\DomainLimitReachedException;
 use App\Exceptions\InvalidDomainException;
 use App\Transformers\DomainTransformer;
 use Illuminate\Http\Request;
@@ -25,6 +27,9 @@ class DomainController extends Controller
 		if( $domain = $license->hasDomain( $domain )) {
 			$domain->forceDelete();
 		}
+		else {
+			throw new InvalidDomainException;
+		}
 	}
 
 	/**
@@ -46,10 +51,10 @@ class DomainController extends Controller
 		$license = $this->getLicense( $request->input( 'license_key' ));
 		$this->validate( $request, $domain->rules );
 		if( $license->hasDomain( $request->input( 'domain' ))) {
-			throw new InvalidDomainException;
+			throw new DomainExistsException;
 		}
 		if( $license->domains()->count() >= $license->max_domains_allowed ) {
-			throw new InvalidDomainException;
+			throw new DomainLimitReachedException;
 		}
 		return $this->respondWithItem( $domain->create([
 			'domain' => $request->input( 'domain' ),

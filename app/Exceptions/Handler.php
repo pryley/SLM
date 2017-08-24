@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\DomainExistsException;
+use App\Exceptions\DomainLimitReachedException;
 use App\Exceptions\InvalidDomainException;
 use App\Exceptions\InvalidLicenseException;
 use Exception;
@@ -23,6 +25,8 @@ class Handler extends ExceptionHandler
 	 */
 	protected $dontReport = [
 		AuthorizationException::class,
+		DomainExistsException::class,
+		DomainLimitReachedException::class,
 		InvalidDomainException::class,
 		InvalidLicenseException::class,
 		HttpException::class,
@@ -56,6 +60,12 @@ class Handler extends ExceptionHandler
 		}
 		if( $e instanceof AuthorizationException ) {
 			return response()->json( ['message' => 'Insufficient privileges to perform this action', 'status' => 403], 403 );
+		}
+		if( $e instanceof DomainExistsException ) {
+			return response()->json( ['message' => 'Domain already exists', 'status' => 403], 403 );
+		}
+		if( $e instanceof DomainLimitReachedException ) {
+			return response()->json( ['message' => 'Domain limit reached for this license', 'status' => 403], 403 );
 		}
 		if( $e instanceof InvalidDomainException ) {
 			return response()->json( ['message' => 'Domain is invalid', 'status' => 401], 401 );
