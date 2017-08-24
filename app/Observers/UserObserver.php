@@ -32,7 +32,7 @@ class UserObserver
 	public function creating( User $user )
 	{
 		$user->password = app( 'hash' )->make( $user->password );
-		$user->uid = Uuid::uuid4()->toString();
+		$user->uuid = Uuid::uuid4()->toString();
 	}
 
 	/**

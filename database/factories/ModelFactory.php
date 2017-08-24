@@ -38,7 +38,7 @@ $factory->define( App\License::class, function( Faker\Generator $faker ) {
 });
 
 /**
- * Password is hashed and uid generated in App\Observers\UserObserver::class
+ * Password is hashed and uuid generated in App\Observers\UserObserver::class
  */
 $factory->define( App\User::class, function( Faker\Generator $faker ) {
 	return [
