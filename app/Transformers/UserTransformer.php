@@ -14,7 +14,6 @@ class UserTransformer extends TransformerAbstract
 			'username' => $user->username,
 			'email' => $user->email,
 			'role' => $user->role,
-			'isActive' => (bool) $user->is_active,
 			'createdAt' => (string) $user->created_at,
 			'updatedAt' => (string) $user->updated_at,
 		];

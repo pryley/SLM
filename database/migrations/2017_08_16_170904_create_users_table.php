@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
 			$table->string( 'email' )->unique();
             $table->string( 'password' )->nullable();
 			$table->enum( 'role', ['BASIC_USER', 'ADMIN_USER'] )->default( 'BASIC_USER' );
-			$table->tinyInteger( 'is_active' );
 			$table->timestamps();
 			$table->softDeletes();
 		});

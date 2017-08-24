@@ -32,7 +32,6 @@ class UserController extends Controller
 		return $this->respondWithItem( $user->create([
 			'email' =>  $request->input( 'email' ),
 			'username' =>  $request->input( 'username' ),
-			'is_active' => $request->input( 'is_active', 1 ),
 			'role' => $request->input( 'role', User::BASIC_ROLE )
 		]), $this->transformer );
 	}

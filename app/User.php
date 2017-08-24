@@ -22,12 +22,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	 * @var array
 	 */
 	protected $fillable = [
-		'uid',
-		'username',
 		'email',
 		'password',
 		'role',
-		'is_active',
+		'uid',
+		'username',
 	];
 
 	/**
@@ -44,7 +43,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	 */
 	public $rules = [
 		'email' => 'required|email|unique:users',
-		'is_active' => 'boolean',
 		'password' => 'required|min:8',
 		'username' => 'required|max:50',
 	];

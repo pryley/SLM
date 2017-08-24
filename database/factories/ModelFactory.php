@@ -46,6 +46,5 @@ $factory->define( App\User::class, function( Faker\Generator $faker ) {
 		'email' => $faker->email,
 		'password' => 'password',
 		'role' => \App\User::BASIC_ROLE,
-		'is_active' => [1,1,0][mt_rand( 0, 2 )],
 	];
 });
