@@ -50,7 +50,7 @@ class LicenseController extends Controller
 	 */
 	public function deactivate( Request $request )
 	{
-		$license = $this->update( $request, [
+		$license = $this->updateLicense( $request, [
 			'status' => 'inactive',
 		]);
 		$license->fireEvent( 'deactivated' );
@@ -66,7 +66,9 @@ class LicenseController extends Controller
 		if( $license = app( License::class )->withTrashed()->where( 'license_key', $licenseKey )->first() ) {
 			$license->forceDelete();
 			$license->fireEvent( 'removed' );
+			return $this->sendCustomResponse( 204, 'License deleted' );
 		}
+		throw new InvalidLicenseException;
 	}
 
 	/**
@@ -74,7 +76,7 @@ class LicenseController extends Controller
 	 */
 	public function renew( Request $request )
 	{
-		$license = $this->update( $request, [
+		$license = $this->updateLicense( $request, [
 			'status' => 'active',
 			'renewed_at' => Carbon::now(),
 			'expires_at' => Carbon::now()->addYear(),
@@ -89,7 +91,7 @@ class LicenseController extends Controller
 	 */
 	public function restore( Request $request )
 	{
-		$license = $this->update( $request, [
+		$license = $this->updateLicense( $request, [
 			'status' => 'active',
 		], true );
 		$license->restore();
@@ -101,7 +103,7 @@ class LicenseController extends Controller
 	 */
 	public function revoke( Request $request )
 	{
-		$license = $this->update( $request, [
+		$license = $this->updateLicense( $request, [
 			'status' => 'revoked',
 		]);
 		$license->delete();
@@ -130,7 +132,7 @@ class LicenseController extends Controller
 	/**
 	 * @return License
 	 */
-	protected function update( Request $request, array $data, $isTrashed = false )
+	protected function updateLicense( Request $request, array $data, $isTrashed = false )
 	{
 		$license = $this->getLicense( $request->input( 'license_key' ), $isTrashed );
 		foreach( $data as $key => $value ) {

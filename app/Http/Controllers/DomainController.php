@@ -26,10 +26,9 @@ class DomainController extends Controller
 		$license = $this->getLicense( $request->input( 'license_key' ));
 		if( $domain = $license->hasDomain( $domain )) {
 			$domain->forceDelete();
+			return $this->sendCustomResponse( 204, 'Domain deleted' );
 		}
-		else {
-			throw new InvalidDomainException;
-		}
+		throw new InvalidDomainException;
 	}
 
 	/**
