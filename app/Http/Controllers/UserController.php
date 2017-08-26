@@ -31,7 +31,7 @@ class UserController extends Controller
 		$this->validate( $request, $user->rules );
 		return $this->respondWithItem( $user->create([
 			'email' =>  $request->input( 'email' ),
-			'username' =>  $request->input( 'username' ),
+			'password' => $request->input( 'password' ),
 			'role' => $request->input( 'role', User::BASIC_ROLE )
 		]), $this->transformer );
 	}

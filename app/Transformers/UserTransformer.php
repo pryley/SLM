@@ -11,7 +11,6 @@ class UserTransformer extends TransformerAbstract
 	{
 		return [
 			'id' => $user->uuid,
-			'username' => $user->username,
 			'email' => $user->email,
 			'role' => $user->role,
 			'createdAt' => (string) $user->created_at,
