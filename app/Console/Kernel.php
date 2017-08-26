@@ -6,6 +6,7 @@ use App\Console\Commands\KeyGenerateCommand;
 use App\Console\Commands\SLMAccessTokenCommand;
 use App\Console\Commands\SLMClientsCommand;
 use App\Console\Commands\SLMInstallCommand;
+use App\Console\Commands\SLMUserCommand;
 use App\Console\Commands\SLMUsersCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
@@ -22,6 +23,7 @@ class Kernel extends ConsoleKernel
 		SLMAccessTokenCommand::class,
 		SLMClientsCommand::class,
 		SLMInstallCommand::class,
+		SLMUserCommand::class,
 		SLMUsersCommand::class,
 	];
 

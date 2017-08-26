@@ -14,6 +14,10 @@ A Software License Manager built on Lumen.
 
 `php artisan slm:clients`
 
+### Create a new user
+
+`php artisan slm:user`
+
 ### List all of the users
 
 `php artisan slm:users`
