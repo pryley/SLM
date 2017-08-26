@@ -1,0 +1,14 @@
+application: slm
+local_path: ~/Sites/slm
+local_url: slm.geminilabs.dev
+repository: git@github.com:geminilabs/SLM.git
+
+bin/composer: /usr/bin/composer
+default_stage: staging
+git_tty: true
+keep_releases: 5
+rsync_options: -avz --progress -e 'ssh -p {{server.port}}' --exclude=temp/ --exclude=cache/ --exclude=.DS_Store
+ssh_multiplexing: true
+ssh_type: native
+use_relative_symlink: false
+writable_mode: chmod
