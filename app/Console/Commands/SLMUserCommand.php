@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\User;
 use App\Http\Controllers\UserController;
-use Cerbero\CommandValidator\ValidatesInput;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -42,7 +41,7 @@ class SLMUserCommand extends Command
 		]);
 		try {
 			$controller->store( $request );
-			return $this->line( '<comment>User created</comment>' );
+			$this->line( '<comment>User created</comment>' );
 		}
 		catch( ValidationException $e ) {
 			foreach( $e->validator->errors()->getMessages() as $key => $messages ) {

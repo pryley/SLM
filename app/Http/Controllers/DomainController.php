@@ -19,7 +19,8 @@ class DomainController extends Controller
 	}
 
 	/**
-	 * @return void
+	 * @return \Illuminate\Http\JsonResponse
+	 * @throws InvalidDomainException
 	 */
 	public function destroy( Request $request, $domain )
 	{

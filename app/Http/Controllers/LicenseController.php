@@ -21,7 +21,7 @@ class LicenseController extends Controller
 	/**
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function index( Request $request )
+	public function index()
 	{
 		return $this->respondWithCollection( app( License::class )->all(), $this->transformer );
 	}
@@ -60,7 +60,8 @@ class LicenseController extends Controller
 
 	/**
 	 * @param string $licenseKey
-	 * @return void
+	 * @return \Illuminate\Http\JsonResponse
+	 * @throws InvalidLicenseException
 	 */
 	public function destroy( $licenseKey )
 	{

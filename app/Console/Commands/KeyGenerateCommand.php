@@ -24,7 +24,7 @@ class KeyGenerateCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return void
+	 * @return void|null
 	 */
 	public function handle()
 	{

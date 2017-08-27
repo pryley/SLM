@@ -31,7 +31,9 @@ class UserObserver
 	 */
 	public function creating( User $user )
 	{
-		$user->password = app( 'hash' )->make( $user->password );
+		if( is_string( $user->password )) {
+			$user->password = app( 'hash' )->make( $user->password );
+		}
 		$user->uuid = Uuid::uuid4()->toString();
 	}
 

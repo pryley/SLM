@@ -17,7 +17,7 @@ class UserController extends Controller
 	/**
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function index( Request $request )
+	public function index()
 	{
 		return $this->respondWithCollection( app( User::class )->all(), $this->transformer );
 	}

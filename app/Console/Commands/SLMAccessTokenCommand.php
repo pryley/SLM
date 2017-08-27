@@ -38,7 +38,7 @@ class SLMAccessTokenCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return void
+	 * @return void|null
 	 * @todo Restrict clients by scope: check User role or provide a default scope for
 	 *       personal_access clients (i.e. "basic" scope). See: App\Providers\AuthServiceProvider
 	 */
@@ -69,7 +69,7 @@ class SLMAccessTokenCommand extends Command
 	}
 
 	/**
-	 * @return stdClass|null
+	 * @return \stdClass|null
 	 */
 	protected function getClient()
 	{
@@ -98,7 +98,7 @@ class SLMAccessTokenCommand extends Command
 	}
 
 	/**
-	 * @param stdClass $client
+	 * @param \stdClass $client
 	 * @return array|null
 	 */
 	protected function getInput( $client )

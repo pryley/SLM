@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
 	 * http://www.restapitutorial.com/httpstatuscodes.html
 	 *
 	 * @param \Illuminate\Http\Request $request
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
 	 */
 	public function render( $request, Exception $e )
 	{
