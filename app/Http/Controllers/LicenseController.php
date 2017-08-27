@@ -123,9 +123,9 @@ class LicenseController extends Controller
 		if( $license->status != 'active' ) {
 			throw new InvalidLicenseException;
 		}
-		// if( !$license->hasDomain( $request->getHost() )) {
-		// 	throw new InvalidDomainException;
-		// }
+		if( app()->environment( 'production' ) && !$license->hasDomain( $request->getHost() )) {
+			throw new InvalidDomainException;
+		}
 		return $this->respondWithItem( $license, $this->transformer );
 	}
 
