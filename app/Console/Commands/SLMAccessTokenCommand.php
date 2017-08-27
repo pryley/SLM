@@ -35,13 +35,6 @@ class SLMAccessTokenCommand extends Command
 	 */
 	protected $description = 'Create an access token for an oauth client';
 
-	public function __construct()
-	{
-		$this->clients = $this->getClients();
-		$this->users = $this->getUsers();
-		parent::__construct();
-	}
-
 	/**
 	 * Execute the console command.
 	 *
@@ -51,6 +44,9 @@ class SLMAccessTokenCommand extends Command
 	 */
 	public function handle()
 	{
+		$this->clients = $this->getClients();
+		$this->users = $this->getUsers();
+
 		if( empty( $this->clients )) {
 			return $this->error( 'No clients have been created' );
 		}
