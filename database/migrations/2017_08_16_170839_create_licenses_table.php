@@ -21,8 +21,9 @@ class CreateLicensesTable extends Migration
 			$table->string( 'last_name' );
 			$table->string( 'email' );
 			$table->string( 'company_name' )->nullable();
-			$table->integer( 'max_domains_allowed' )->default( 1 );
 			$table->string( 'transaction_id' )->unique();
+			$table->integer( 'max_domains_allowed' )->default( 1 );
+			$table->integer( 'num_times_renewed' )->default( 0 );
 			$table->timestamp( 'expires_at' )->nullable();
 			$table->timestamp( 'renewed_at' )->nullable();
 			$table->timestamps();

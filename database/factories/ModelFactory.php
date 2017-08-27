@@ -34,6 +34,7 @@ $factory->define( App\License::class, function( Faker\Generator $faker ) {
 		'max_domains_allowed' => $max_domains_allowed,
 		'transaction_id' => str_random( 32 ),
 		'deleted_at' => $deleted_at,
+		'expires_at' => Carbon\Carbon::now()->addYear(),
 	];
 });
 

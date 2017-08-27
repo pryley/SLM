@@ -117,10 +117,7 @@ class LicenseController extends Controller
 	public function verify( Request $request )
 	{
 		$license = $this->getLicense( $request->input( 'license_key' ));
-		if( $license->hasExpired() ) {
-			$license->status = 'inactive';
-		}
-		if( $license->status != 'active' ) {
+		if( !$this->verifyLicense( $license )) {
 			throw new InvalidLicenseException;
 		}
 		if( app()->environment( 'production' ) && !$license->hasDomain( $request->getHost() )) {
@@ -135,10 +132,25 @@ class LicenseController extends Controller
 	protected function updateLicense( Request $request, array $data, $isTrashed = false )
 	{
 		$license = $this->getLicense( $request->input( 'license_key' ), $isTrashed );
+		if( array_key_exists( 'renewed_at', $data ) && $data['renewed_at'] instanceof Carbon ) {
+			$license->num_times_renewed += 1;
+		}
 		foreach( $data as $key => $value ) {
 			$license->$key = !is_null( $value ) ? $value : $license->$key;
 		}
 		$license->save();
 		return $license;
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function verifyLicense( License $license )
+	{
+		if( $license->hasExpired() ) {
+			$license->status = 'inactive';
+			$license->save();
+		}
+		return $license->status == 'active';
 	}
 }
