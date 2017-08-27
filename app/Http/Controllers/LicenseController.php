@@ -6,6 +6,7 @@ use App\Exceptions\InvalidDomainException;
 use App\Exceptions\InvalidLicenseException;
 use App\License;
 use App\Transformers\LicenseTransformer;
+use App\Transformers\LicensePublicTransformer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -114,7 +115,7 @@ class LicenseController extends Controller
 	/**
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function verify( Request $request )
+	public function verify( Request $request, LicensePublicTransformer $transformer )
 	{
 		$license = $this->getLicense( $request->input( 'license_key' ));
 		if( !$this->verifyLicense( $license )) {
@@ -123,7 +124,7 @@ class LicenseController extends Controller
 		if( app()->environment( 'production' ) && !$license->hasDomain( $request->getHost() )) {
 			throw new InvalidDomainException;
 		}
-		return $this->respondWithItem( $license, $this->transformer );
+		return $this->respondWithItem( $license, $transformer );
 	}
 
 	/**
