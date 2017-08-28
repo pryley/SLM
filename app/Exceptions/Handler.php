@@ -12,12 +12,28 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
+use ReflectionObject;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
+	/**
+	 * @var array
+	 */
+	const EXCEPTIONS = [
+		'AuthenticationException' => ['Unauthorized', 401],
+		'AuthorizationException' => ['Insufficient privileges to perform this action', 403],
+		'DomainExistsException' => ['Domain already exists', 403],
+		'DomainLimitReachedException' => ['Domain limit reached for this license', 403],
+		'InvalidDomainException' => ['Domain is invalid', 401],
+		'InvalidLicenseException' => ['License is invalid', 401],
+		'MethodNotAllowedHttpException' => ['Method Not Allowed', 405],
+		'NotFoundHttpException' => ['The requested resource was not found', 404],
+		'ValidationException' => ['Validation failed', 422],
+	];
+
 	/**
 	 * A list of the exception types that should not be reported.
 	 *
@@ -55,33 +71,24 @@ class Handler extends ExceptionHandler
 	 */
 	public function render( $request, Exception $e )
 	{
-		if( $e instanceof AuthenticationException ) {
-			return response()->json( ['message' => 'Unauthorized', 'status' => 401], 401 );
+		$exception = (new ReflectionObject( $e ))->getShortName();
+		if( !array_key_exists( $exception, static::EXCEPTIONS )) {
+			return parent::render( $request, $e );
 		}
-		if( $e instanceof AuthorizationException ) {
-			return response()->json( ['message' => 'Insufficient privileges to perform this action', 'status' => 403], 403 );
+		$value = static::EXCEPTIONS[$exception];
+		$data = ['message' => $value[0], 'status' => $value[1]];
+		if( method_exists( $this, $method = sprintf( 'custom%sData', $exception ))) {
+			$data = $this->$method( $e, $data );
 		}
-		if( $e instanceof DomainExistsException ) {
-			return response()->json( ['message' => 'Domain already exists', 'status' => 403], 403 );
-		}
-		if( $e instanceof DomainLimitReachedException ) {
-			return response()->json( ['message' => 'Domain limit reached for this license', 'status' => 403], 403 );
-		}
-		if( $e instanceof InvalidDomainException ) {
-			return response()->json( ['message' => 'Domain is invalid', 'status' => 401], 401 );
-		}
-		if( $e instanceof InvalidLicenseException ) {
-			return response()->json( ['message' => 'License is invalid', 'status' => 401], 401 );
-		}
-		if( $e instanceof MethodNotAllowedHttpException ) {
-			return response()->json( ['message' => 'Method Not Allowed', 'status' => 405], 405 );
-		}
-		if( $e instanceof NotFoundHttpException ) {
-			return response()->json( ['message' => 'The requested resource was not found', 'status' => 404], 404 );
-		}
-		if( $e instanceof ValidationException ) {
-			return response()->json( ['message' => 'Validation failed', 'errors' => $e->validator->errors(), 'status' => 422], 422 );
-		}
-		return parent::render( $request, $e );
+		return response()->json( $data, $value[1] );
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function customValidationExceptionData( Exception $e, array $data )
+	{
+		$data['errors'] = $e->validator->errors();
+		return $data;
 	}
 }
