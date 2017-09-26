@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidDomainException;
 use App\Exceptions\InvalidLicenseException;
+use App\Exceptions\InvalidSoftwareException;
 use App\License;
+use App\Software;
 use App\Transformers\LicenseTransformer;
 use App\Transformers\LicensePublicTransformer;
 use Carbon\Carbon;
@@ -43,6 +45,7 @@ class LicenseController extends Controller
 			'status' => 'active',
 			'transaction_id' => $request->input( 'transaction_id' ),
 		])->save();
+		$this->attachLicenseToSoftware( $request->input( 'software' ), $license->id );
 		return $this->respondWithItem( $license, $this->transformer );
 	}
 
@@ -122,10 +125,26 @@ class LicenseController extends Controller
 		if( !$this->verifyLicense( $license )) {
 			throw new InvalidLicenseException;
 		}
+		if( !$this->verifySoftware( $license, $request->input( 'software' ))) {
+			throw new InvalidSoftwareException;
+		}
 		if( app()->environment( 'production' ) && !$license->hasDomain( $request->getHost() )) {
 			throw new InvalidDomainException;
 		}
 		return $this->respondWithItem( $license, $transformer );
+	}
+
+	/**
+	 * @return void
+	 * @throws InvalidSoftwareException
+	 */
+	protected function attachLicenseToSoftware( $softwareSlug, $licenseId )
+	{
+		if( $software = app( Software::class )->where( 'slug', $softwareSlug )->first() ) {
+			$software->licenses()->attach( $licenseId );
+			return;
+		}
+		throw new InvalidSoftwareException;
 	}
 
 	/**
@@ -154,5 +173,13 @@ class LicenseController extends Controller
 			$license->save();
 		}
 		return $license->status == 'active';
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function verifySoftware( License $license, $softwareSlug )
+	{
+		return $license->hasSoftware( $softwareSlug );
 	}
 }

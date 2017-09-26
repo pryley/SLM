@@ -48,3 +48,12 @@ $factory->define( App\User::class, function( Faker\Generator $faker ) {
 		'role' => \App\User::BASIC_ROLE,
 	];
 });
+
+$factory->define( App\Software::class, function( Faker\Generator $faker ) {
+	return [
+		'name' => $faker->company,
+		'slug' => $faker->slug,
+		'repository' => $faker->url,
+		'status' => 'active',
+	];
+});

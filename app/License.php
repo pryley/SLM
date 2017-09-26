@@ -26,12 +26,12 @@ class License extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'status',
+		'company_name',
+		'email',
 		'first_name',
 		'last_name',
-		'email',
-		'company_name',
 		'max_domains_allowed',
+		'status',
 		'transaction_id',
 	];
 
@@ -65,6 +65,7 @@ class License extends Model
 		'email' => 'required|email',
 		'first_name' => 'required',
 		'last_name' => 'required',
+		'software' => 'required|exists:software,slug',
 		'transaction_id' => 'required|unique:licenses',
 	];
 
@@ -87,6 +88,16 @@ class License extends Model
 	}
 
 	/**
+	 * Determine if the license has a software set.
+	 *
+	 * @return bool
+	 */
+	public function hasSoftware( $software )
+	{
+		return $this->software()->where( 'slug', $software )->first();
+	}
+
+	/**
 	 * Determine if the license is expired.
 	 *
 	 * @return bool
@@ -94,5 +105,13 @@ class License extends Model
 	public function hasExpired()
 	{
 		return Carbon::now()->subWeek()->gte( Carbon::parse( $this->expires_at ));
+	}
+
+	/**
+	 * Get the software for the license.
+	 */
+	public function software()
+	{
+		return $this->belongsToMany( Software::class, 'software_licenses', 'license_id', 'software_id' );
 	}
 }

@@ -2,6 +2,7 @@
 
 use App\Domain;
 use App\License;
+use App\Software;
 use Illuminate\Database\Seeder;
 
 class LicensesTableSeeder extends Seeder
@@ -21,6 +22,7 @@ class LicensesTableSeeder extends Seeder
 					->each( function( $domain ) use( $license ) {
 						$license->domains()->save( $domain );
 					});
+				app( Software::class )->where( 'slug', 'site_reviews_tripadvisor' )->first()->licenses()->attach( $license->id );
 			});
 	}
 }

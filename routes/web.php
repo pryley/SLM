@@ -13,7 +13,6 @@
 
 $app->get( '/', function(){} );
 
-
 $app->group( ['prefix' => 'v1'], function() use( $app ) {
 	// public routes
 	$app->group( ['middleware' => 'throttle:20,1'], function() use( $app ) {
@@ -26,6 +25,12 @@ $app->group( ['prefix' => 'v1'], function() use( $app ) {
 	]);
 	// protected routes
 	$app->group( ['middleware' => ['auth:api', 'throttle:60,1']], function() use( $app ) {
+		// software
+		$app->get( 'software', 'SoftwareController@index' );
+		$app->post( 'software', 'SoftwareController@store' );
+		$app->post( 'software/archive', 'SoftwareController@archive' );
+		$app->post( 'software/restore', 'SoftwareController@restore' );
+		$app->delete( 'software/{slug}', 'SoftwareController@destroy' );
 		// licenses
 		$app->get( 'licenses', 'LicenseController@index' );
 		$app->post( 'licenses', 'LicenseController@store' );
