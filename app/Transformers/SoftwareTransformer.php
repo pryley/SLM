@@ -12,10 +12,11 @@ class SoftwareTransformer extends TransformerAbstract
 		return [
 			'name' => (string) $software->name,
 			'slug' => (string) $software->slug,
+			'repository' => (string) $software->repository,
 			'status' => (string) $software->status,
-			'createdAt' => (string) $license->created_at,
-			'updatedAt' => (string) $license->updated_at,
-			'archivedAt' => (string) $license->deleted_at,
+			'createdAt' => (string) $software->created_at,
+			'updatedAt' => (string) $software->updated_at,
+			'archivedAt' => (string) $software->deleted_at,
 		];
 	}
 }
