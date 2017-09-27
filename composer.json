@@ -5,18 +5,18 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.6.4",
-        "laravel/lumen-framework": "5.4.*",
+        "php": ">=7.0",
+        "laravel/lumen-framework": "5.5.*",
         "vlucas/phpdotenv": "~2.2",
         "ramsey/uuid": "^3.7",
         "dusterio/lumen-passport": "^0.2.0",
-        "barryvdh/laravel-cors": "^0.9.2",
+        "barryvdh/laravel-cors": "^0.9.3",
         "league/fractal": "^0.17.0",
-        "deployer/deployer": "^6.0"
+        "deployer/deployer": "^6.0.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
-        "phpunit/phpunit": "~5.0",
+        "phpunit/phpunit": "^6.3.1",
         "mockery/mockery": "~0.9"
     },
     "autoload": {
@@ -36,5 +36,8 @@
         ]
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "optimize-autoloader": true
+    }
 }

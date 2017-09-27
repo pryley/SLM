@@ -1,0 +1,36 @@
+build:
+    environment:
+        php: '7.1'
+        mysql: '5.7'
+        node: '8.1'
+        hosts:
+            laravel.dev: '127.0.0.1'
+        variables:
+            APP_KEY: 'base64:OYl4Bk9ekouOUIRXyeTD0FVi+cJ9D+HMyDJBgSBSUuI='
+            APP_ENV: 'testing'
+            DB_HOST: '127.0.0.1'
+            DB_DATABASE: 'scrutinizer'
+            DB_USERNAME: 'root'
+            DB_PASSWORD: ''
+    cache:
+        directories:
+            - vendor/
+            - ~/.composer/cache/
+    dependencies:
+        before:
+            - mysql -uroot -e 'CREATE DATABASE scrutinizer'
+        after:
+            - php artisan migrate
+    tests:
+        before:
+            - chmod -R 777 storage
+        override:
+            - php-scrutinizer-run
+            -
+                command: phpcs-run
+                use_website_config: true
+            -
+                command: vendor/bin/phpunit --coverage-clover=coverage
+                coverage:
+                    file: coverage
+                    format: clover
