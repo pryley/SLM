@@ -122,7 +122,7 @@ class SLMAccessTokenCommand extends Command
 	 */
 	protected function getUsers()
 	{
-		return User::get( ['id', 'email', 'role'] )->toArray();
+		return app( User::class )->get( ['id', 'email', 'role'] )->toArray();
 	}
 
 	/**

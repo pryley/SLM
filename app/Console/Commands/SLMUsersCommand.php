@@ -29,7 +29,7 @@ class SLMUsersCommand extends Command
 	public function handle()
 	{
 		$columns = ['id', 'email', 'role'];
-		if( count( $users = User::get( $columns )->toArray() ) > 0 ) {
+		if( count( $users = app( User::class )->get( $columns )->toArray() ) > 0 ) {
 			return $this->table( $columns, $users );
 		}
 		$this->error( 'No users found' );

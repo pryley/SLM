@@ -7,7 +7,6 @@ use App\Http\Controllers\UserController;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Validator;
 
 class SLMUserCommand extends Command
 {
@@ -88,7 +87,7 @@ class SLMUserCommand extends Command
 		if( 0 === strlen( $value )) {
 			throw new \Exception( 'A value is required.' );
 		}
-		$validator = Validator::make( [$attribute => $value], [$attribute => $validation] );
+		$validator = app( 'validator' )->make( [$attribute => $value], [$attribute => $validation] );
 		if( $validator->fails() ) {
 			throw new \Exception( $validator->errors()->first( $attribute ));
 		}
