@@ -88,6 +88,9 @@ $app->register( Barryvdh\Cors\LumenServiceProvider::class );
 $app->register( Laravel\Passport\PassportServiceProvider::class );
 $app->register( Dusterio\LumenPassport\PassportServiceProvider::class );
 
+if( $app->environment() !== 'production' ) {
+	$app->register( Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class );
+}
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
