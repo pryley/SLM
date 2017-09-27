@@ -6,3 +6,6 @@ Homestead.yaml
 !.env.example
 /storage/oauth-public.key
 /storage/oauth-private.key
+/_ide_helper.php
+/code-analysis.log
+/tests/clover.xml
