@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidSoftwareException;
+use App\License;
 use App\Software;
 use App\Transformers\SoftwareTransformer;
 use Illuminate\Http\Request;
