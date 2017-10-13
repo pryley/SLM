@@ -92,7 +92,9 @@ class ManageLicensesTest extends TestCase
 			'software' => $software->slug,
 			'transaction_id' => 'transaction_id',
 		]);
-		$this->auth()->post( '/v1/licenses', $data );
+		$this->auth()->post( '/v1/licenses', $data )->seeJson([
+			'status' => 200,
+		]);
 		$this->auth()->post( '/v1/licenses', $data )->seeJson([
 			'status' => 422,
 			'errors' => (object) [

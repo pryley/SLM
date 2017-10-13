@@ -13,6 +13,15 @@ class ManageLicenseDomainsTest extends TestCase
 {
 	use DatabaseTransactions;
 
+	protected function getLicenseKey( $domain = false )
+	{
+		$license = factory( License::class )->create();
+		if( $domain ) {
+			$license->domains()->save( factory( Domain::class )->make( ['domain' => $domain] ));
+		}
+		return $license->license_key;
+	}
+
 	private function validParams( $overrides = [] )
 	{
 		return array_merge([
@@ -24,15 +33,12 @@ class ManageLicenseDomainsTest extends TestCase
 	/** @test */
 	public function add_a_domain_to_a_license()
 	{
-		$license = factory( License::class )->create();
 		$this->auth()->post( '/v1/domains', $this->validParams([
 			'domain' => 'www.test.com',
-			'license_key' => $license->license_key,
+			'license_key' => $this->getLicenseKey(),
 		]))->seeJson([
 			'status' => 200,
 		]);
-
-		// error_log( print_r( $this->response, 1 ));
 
 		// get License domains
 		// $domain = $this->getDomainFromLicense( $this->response->original );
@@ -42,16 +48,41 @@ class ManageLicenseDomainsTest extends TestCase
 		// add domain to License
 	}
 
+	/** @test */
 	public function domain_field_is_required()
 	{
+		$this->auth()->post( '/v1/domains', [
+			'license_key' => $this->getLicenseKey(),
+		])->seeJson([
+			'status' => 422,
+			'errors' => (object) [
+				'domain' => ['The domain field is required.']
+
+			],
+		]);
 	}
 
+	/** @test */
 	public function domain_field_must_be_unique_for_license()
 	{
+		$this->auth()->post( '/v1/domains', $this->validParams([
+			'domain' => 'www.test.com',
+			'license_key' => $this->getLicenseKey( 'www.test.com' ),
+		]))->seeJson([
+			'status' => 403,
+			'message' => 'Domain already exists',
+		]);
 	}
 
+	/** @test */
 	public function domain_field_must_exist_to_be_removed_from_a_license()
 	{
+		$this->auth()->delete( '/v1/domains/delete/www.test.com', [
+			'license_key' => $this->getLicenseKey( 'www.test.com' ),
+		])->seeJson([
+			'status' => 404,
+			'message' => 'The requested resource was not found',
+		]);
 	}
 
 	public function get_all_domains_of_a_license()
