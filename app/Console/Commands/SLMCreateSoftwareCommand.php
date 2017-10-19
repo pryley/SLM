@@ -17,7 +17,8 @@ class SLMCreateSoftwareCommand extends Command
 	 */
 	protected $signature = 'slm:create-software
 		{--name : Enter the software name}
-		{--slug : Enter the software slug}';
+		{--slug : Enter the software slug}
+		{--repository : Enter the software repository}';
 
 	/**
 	 * The console command description.
@@ -37,6 +38,7 @@ class SLMCreateSoftwareCommand extends Command
 		$request->merge([
 			'name' => $this->getSoftwareName(),
 			'slug' => $this->getSoftwareSlug(),
+			'repository' => $this->getSoftwareRepository(),
 		]);
 		try {
 			$controller->store( $request );
@@ -59,6 +61,17 @@ class SLMCreateSoftwareCommand extends Command
 	{
 		return $this->output->ask( 'Enter the software name', null, function( $value ) {
 			return $this->validateInput( 'name', 'unique:software', $value );
+		});
+	}
+
+	/**
+	 * @return string
+	 * @throws Exception
+	 */
+	protected function getSoftwareRepository()
+	{
+		return $this->output->ask( 'Enter the software repository', null, function( $value ) {
+			return $this->validateInput( 'repository', 'url', $value );
 		});
 	}
 
