@@ -45,7 +45,7 @@ class Software extends Model
 	 */
 	public $rules = [
 		'name' => 'required',
-		'slug' => 'required|unique:software',
+		'slug' => 'required|alpha_dash|unique:software',
 		'status' => 'in:active,archived',
 	];
 

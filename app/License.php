@@ -65,7 +65,7 @@ class License extends Model
 		'email' => 'required|email',
 		'first_name' => 'required',
 		'last_name' => 'required',
-		'software' => 'required|exists:software,slug',
+		'software' => 'required|alpha_dash|exists:software,slug',
 		'transaction_id' => 'required|unique:licenses',
 	];
 
