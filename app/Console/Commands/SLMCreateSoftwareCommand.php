@@ -2,45 +2,45 @@
 
 namespace App\Console\Commands;
 
-use App\User;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\SoftwareController;
+use App\Software;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-class SLMUserCommand extends Command
+class SLMCreateSoftwareCommand extends Command
 {
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $signature = 'slm:user
-		{--email : Enter the user\'s email}
-		{--password : Enter the user\'s password}';
+	protected $signature = 'slm:create-software
+		{--name : Enter the software name}
+		{--slug : Enter the software slug}';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Create a new user';
+	protected $description = 'Create a new software';
 
 	/**
 	 * Execute the console command.
 	 *
 	 * @return void
 	 */
-	public function handle( UserController $controller )
+	public function handle( SoftwareController $controller )
 	{
 		$request = new Request;
 		$request->merge([
-			'email' => $this->option( 'email' ) ?: $this->getEmail(),
-			'password' => $this->option( 'password' ) ?: $this->getPassword(),
+			'name' => $this->getSoftwareName(),
+			'slug' => $this->getSoftwareSlug(),
 		]);
 		try {
 			$controller->store( $request );
-			$this->line( '<comment>User created</comment>' );
+			$this->line( '<comment>Software created</comment>' );
 		}
 		catch( ValidationException $e ) {
 			foreach( $e->validator->errors()->getMessages() as $key => $messages ) {
@@ -55,11 +55,10 @@ class SLMUserCommand extends Command
 	 * @return string
 	 * @throws Exception
 	 */
-	protected function getEmail()
+	protected function getSoftwareName()
 	{
-		return $this->option( 'email' )
-			?: $this->output->ask( 'Enter the user\'s email', null, function( $value ) {
-			return $this->validateInput( 'email', 'email|unique:users', $value );
+		return $this->output->ask( 'Enter the software name', null, function( $value ) {
+			return $this->validateInput( 'name', 'unique:software', $value );
 		});
 	}
 
@@ -67,11 +66,10 @@ class SLMUserCommand extends Command
 	 * @return string
 	 * @throws Exception
 	 */
-	protected function getPassword()
+	protected function getSoftwareSlug()
 	{
-		return $this->option( 'password' )
-			?: $this->output->ask( 'Enter the user\'s password', null, function( $value ) {
-			return $this->validateInput( 'password', 'min:8', $value );
+		return $this->output->ask( 'Enter the software slug', null, function( $value ) {
+			return $this->validateInput( 'slug', 'alpha_dash|unique:software', $value );
 		});
 	}
 
