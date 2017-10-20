@@ -50,6 +50,7 @@ class SoftwareController extends Controller
 		$software->fill([
 			'name' => $request->input( 'name' ),
 			'slug' => $request->input( 'slug' ),
+			'repository' => $request->input( 'repository' ),
 			'status' => 'active',
 		])->save();
 		return $this->respondWithItem( $software, $this->transformer );
