@@ -11,17 +11,18 @@
         "dusterio/lumen-passport": "^0.2.0",
         "laravel/lumen-framework": "5.5.*",
         "league/fractal": "^0.17.0",
+        "league/uri": "^5.0",
         "ramsey/uuid": "^3.7",
         "vlucas/phpdotenv": "~2.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "dev-master",
+        "friendsofphp/php-cs-fixer": "^2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~0.9",
+        "phpmd/phpmd": "@stable",
         "phpstan/phpstan": "^0.8.5",
         "phpunit/phpunit": "^6.3.1",
-        "friendsofphp/php-cs-fixer": "^2.0",
-        "phpmd/phpmd": "@stable",
         "squizlabs/php_codesniffer": "*"
     },
     "autoload": {
@@ -31,8 +32,8 @@
     },
     "autoload-dev": {
         "classmap": [
-            "tests/",
-            "database/"
+            "database/",
+            "tests/"
         ]
     },
     "scripts": {

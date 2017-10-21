@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use League\Uri\Components\Host;
 
 class License extends Model
 {
@@ -84,7 +85,7 @@ class License extends Model
 	 */
 	public function hasDomain( $domain )
 	{
-		return $this->domains()->where( 'domain', $domain )->first();
+		return $this->isLocalDomain( $domain ) || $this->domains()->where( 'domain', $domain )->first();
 	}
 
 	/**
@@ -113,5 +114,57 @@ class License extends Model
 	public function software()
 	{
 		return $this->belongsToMany( Software::class, 'software_licenses', 'license_id', 'software_id' );
+	}
+
+	/**
+	 * @param string $domain
+	 * @return bool
+	 */
+	protected function isLocalDomain( $domain )
+	{
+		if( $domain == 'localhost' ) {
+			return true;
+		}
+		$host = new Host( $domain );
+		if( $host->isIp() ) {
+			return !filter_var( $host->createFromIp( $domain ), FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+		}
+		$domains = $this->domains->pluck( 'domain' )->toArray();
+		if( empty( $domains )) {
+			return false;
+		}
+		foreach( $domains as $existingDomain ) {
+			if( !$this->isLocalValidDomain( $existingDomain, $host )) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @param string $domain
+	 * @return bool
+	 */
+	protected function isLocalValidDomain( $domain, Host $host )
+	{
+		$registeredHost = new Host( $domain );
+		if( $this->removeSuffixFromDomain( $host ) != $this->removeSuffixFromDomain( $registeredHost )) {
+			return false;
+		}
+		$subdomainWhitelist = array_unique( ['dev', 'staging', $registeredHost->getSubdomain()] );
+		$suffixWhitelist = array_unique( ['dev', $registeredHost->getPublicSuffix()] );
+		if(( !in_array( $host->getPublicSuffix(), $suffixWhitelist ) && $host->isPublicSuffixValid() )
+			|| !in_array( $host->getSubdomain(), $subdomainWhitelist )) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function removeSuffixFromDomain( Host $host )
+	{
+		return substr( $host->getRegisterableDomain(), 0, -strlen( $host->getPublicSuffix() ));
 	}
 }

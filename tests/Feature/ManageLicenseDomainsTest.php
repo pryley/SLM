@@ -106,4 +106,28 @@ class ManageLicenseDomainsTest extends TestCase
 		// delete domain from License
 		// return true
 	}
+
+
+	/** @test */
+	public function license_allows_local_domains()
+	{
+		$license = factory( License::class )->create();
+		$license->domains()->save( factory( Domain::class )->make( ['domain' => 'test.com'] ));
+
+		$this->AssertTrue( $license->hasDomain( 'localhost' ));
+		$this->AssertTrue( $license->hasDomain( '127.0.0.1' ));
+		$this->AssertTrue( $license->hasDomain( '192.168.1.13' ));
+		$this->AssertTrue( $license->hasDomain( '10.0.1.13' ));
+		$this->AssertTrue( $license->hasDomain( 'test.dev' ));
+		$this->AssertTrue( $license->hasDomain( 'test.local' ));
+		$this->AssertTrue( $license->hasDomain( 'test.localhost' ));
+		$this->AssertTrue( $license->hasDomain( 'test.test' ));
+		$this->AssertTrue( $license->hasDomain( 'staging.test.com' ));
+		$this->AssertTrue( $license->hasDomain( 'dev.test.com' ));
+
+		$this->AssertFalse( $license->hasDomain( 'hello.test.com' ));
+		$this->AssertFalse( $license->hasDomain( 'staging.test.net' ));
+		$this->AssertFalse( $license->hasDomain( 'staging.test' ));
+		$this->AssertFalse( $license->hasDomain( 'test' ));
+	}
 }
