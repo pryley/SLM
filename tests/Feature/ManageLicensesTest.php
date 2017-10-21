@@ -172,8 +172,8 @@ class ManageLicensesTest extends TestCase
 		$this->assertTrue( Carbon::parse( $data->renewedAt )->isToday() );
 		$this->assertTrue( Carbon::parse( $data->expiresAt )->isNextYear() );
 		$this->assertEquals( 'active', $data->status );
-		$this->assertEquals( 1, $data->numTimesRenewed );
-		$this->assertEquals( 5, $data->maxDomainsAllowed );
+		$this->assertEquals( 1, $data->renewedCount );
+		$this->assertEquals( 5, $data->domainLimit );
 	}
 
 	/** @test */

@@ -10,20 +10,21 @@ class LicenseTransformer extends TransformerAbstract
 	public function transform( License $license )
 	{
 		return [
-			'license' => $license->license_key,
-			'status' => $license->status,
+			'company' => (string) $license->company_name,
+			'createdAt' => (string) $license->created_at,
+			'domainCount' => (int) $license->domains->count(),
+			'domainLimit' => (int) $license->max_domains_allowed,
+			'email' => $license->email,
+			'expiresAt' => (string) $license->expires_at,
 			'firstName' => $license->first_name,
 			'lastName' => $license->last_name,
-			'email' => $license->email,
-			'company' => (string) $license->company_name,
-			'transactionId' => $license->transaction_id,
-			'maxDomainsAllowed' => (int) $license->max_domains_allowed,
-			'numTimesRenewed' => (int) $license->num_times_renewed,
-			'expiresAt' => (string) $license->expires_at,
-			'createdAt' => (string) $license->created_at,
-			'updatedAt' => (string) $license->updated_at,
+			'license' => $license->license_key,
 			'renewedAt' => (string) $license->renewed_at,
+			'renewedCount' => (int) $license->num_times_renewed,
 			'revokedAt' => (string) $license->deleted_at,
+			'status' => $license->status,
+			'transactionId' => $license->transaction_id,
+			'updatedAt' => (string) $license->updated_at,
 		];
 	}
 }

@@ -10,8 +10,8 @@ class DomainTransformer extends TransformerAbstract
 	public function transform( Domain $domain )
 	{
 		return [
-			'domain' => $domain->domain,
 			'createdAt' => (string) $domain->created_at,
+			'domain' => $domain->domain,
 			'updatedAt' => (string) $domain->updated_at,
 		];
 	}
