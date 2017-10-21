@@ -123,7 +123,7 @@ class LicenseController extends Controller
 	{
 		$license = $this->getLicense( $request->input( 'license_key' ));
 		if( !$this->verifyLicense( $license )) {
-			throw new InvalidLicenseException;
+			throw new InvalidLicenseException( $license->status );
 		}
 		if( !$this->verifySoftware( $license, $request->input( 'software' ))) {
 			throw new InvalidSoftwareException;
@@ -169,7 +169,7 @@ class LicenseController extends Controller
 	protected function verifyLicense( License $license )
 	{
 		if( $license->hasExpired() ) {
-			$license->status = 'inactive';
+			$license->status = 'expired';
 			$license->save();
 		}
 		return $license->status == 'active';

@@ -27,11 +27,13 @@ class Handler extends ExceptionHandler
 		'AuthorizationException' => ['Insufficient privileges to perform this action', 403],
 		'DomainExistsException' => ['Domain already exists', 403],
 		'DomainLimitReachedException' => ['Domain limit reached for this license', 403],
+		'ExpiredLicenseException' => ['License has expired', 401],
 		'InvalidDomainException' => ['Domain is invalid', 401],
 		'InvalidLicenseException' => ['License is invalid', 401],
 		'InvalidSoftwareException' => ['Software is invalid', 401],
 		'MethodNotAllowedHttpException' => ['Method Not Allowed', 405],
 		'NotFoundHttpException' => ['The requested resource was not found', 404],
+		'RevokedLicenseException' => ['License has been revoked', 401],
 		'ValidationException' => ['Validation failed', 422],
 	];
 
@@ -76,6 +78,10 @@ class Handler extends ExceptionHandler
 		$exception = (new ReflectionObject( $e ))->getShortName();
 		if( !array_key_exists( $exception, static::EXCEPTIONS )) {
 			return parent::render( $request, $e );
+		}
+		$licenseException = ucfirst( urlencode( $e->getMessage() )).'LicenseException';
+		if( array_key_exists( $licenseException, static::EXCEPTIONS )) {
+			$exception = $licenseException;
 		}
 		$value = static::EXCEPTIONS[$exception];
 		$data = ['message' => $value[0], 'status' => $value[1]];
