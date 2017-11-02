@@ -9,6 +9,10 @@ class LicenseTransformer extends TransformerAbstract
 {
 	public function transform( License $license )
 	{
+		$software = $license->software->first();
+		$productId = isset( $software->product_id )
+			? $software->product_id
+			: '';
 		return [
 			'company' => (string) $license->company_name,
 			'createdAt' => (string) $license->created_at,
@@ -19,6 +23,7 @@ class LicenseTransformer extends TransformerAbstract
 			'firstName' => $license->first_name,
 			'lastName' => $license->last_name,
 			'license' => $license->license_key,
+			'productId' => (string) $productId,
 			'renewedAt' => (string) $license->renewed_at,
 			'renewedCount' => (int) $license->num_times_renewed,
 			'revokedAt' => (string) $license->deleted_at,
