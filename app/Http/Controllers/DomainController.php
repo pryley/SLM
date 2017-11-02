@@ -53,7 +53,8 @@ class DomainController extends Controller
 		if( $license->hasDomain( $request->input( 'domain' ))) {
 			throw new DomainExistsException;
 		}
-		if( $license->domains()->count() >= $license->max_domains_allowed ) {
+		if( $license->max_domains_allowed > 0
+			&& $license->domains()->count() >= $license->max_domains_allowed ) {
 			throw new DomainLimitReachedException;
 		}
 		return $this->respondWithItem( $domain->create([
