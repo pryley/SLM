@@ -18,6 +18,7 @@ class SLMCreateSoftwareCommand extends Command
 	protected $signature = 'slm:create-software
 		{--name : Enter the software name}
 		{--slug : Enter the software slug}
+		{--product-id : Enter the software product_id}
 		{--repository : Enter the software repository}';
 
 	/**
@@ -38,6 +39,7 @@ class SLMCreateSoftwareCommand extends Command
 		$request->merge([
 			'name' => $this->getSoftwareName(),
 			'slug' => $this->getSoftwareSlug(),
+			'product_id' => $this->getSoftwareProductId(),
 			'repository' => $this->getSoftwareRepository(),
 		]);
 		try {
@@ -60,7 +62,18 @@ class SLMCreateSoftwareCommand extends Command
 	protected function getSoftwareName()
 	{
 		return $this->output->ask( 'Enter the software name', null, function( $value ) {
-			return $this->validateInput( 'name', 'unique:software', $value );
+			return $this->validateInput( 'name', '', $value );
+		});
+	}
+
+	/**
+	 * @return string
+	 * @throws Exception
+	 */
+	protected function getSoftwareProductId()
+	{
+		return $this->output->ask( 'Enter the software product ID', null, function( $value ) {
+			return $this->validateInput( 'product-id', 'unique:software', $value );
 		});
 	}
 
@@ -82,7 +95,7 @@ class SLMCreateSoftwareCommand extends Command
 	protected function getSoftwareSlug()
 	{
 		return $this->output->ask( 'Enter the software slug', null, function( $value ) {
-			return $this->validateInput( 'slug', 'alpha_dash|unique:software', $value );
+			return $this->validateInput( 'slug', 'alpha_dash', $value );
 		});
 	}
 

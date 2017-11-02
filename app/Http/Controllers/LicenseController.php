@@ -7,8 +7,8 @@ use App\Exceptions\InvalidLicenseException;
 use App\Exceptions\InvalidSoftwareException;
 use App\License;
 use App\Software;
-use App\Transformers\LicenseTransformer;
 use App\Transformers\LicensePublicTransformer;
+use App\Transformers\LicenseTransformer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -45,7 +45,7 @@ class LicenseController extends Controller
 			'status' => 'active',
 			'transaction_id' => $request->input( 'transaction_id' ),
 		])->save();
-		$this->attachLicenseToSoftware( $request->input( 'software' ), $license->id );
+		$this->attachLicenseToSoftware( $request->input( 'product_id' ), $license->id );
 		return $this->respondWithItem( $license, $this->transformer );
 	}
 
@@ -125,7 +125,7 @@ class LicenseController extends Controller
 		if( !$this->verifyLicense( $license )) {
 			throw new InvalidLicenseException( $license->status );
 		}
-		if( !$this->verifySoftware( $license, $request->input( 'software' ))) {
+		if( !$this->verifySoftware( $license, $request->input( 'product_id' ))) {
 			throw new InvalidSoftwareException;
 		}
 		if( app()->environment( 'production' ) && !$license->hasDomain( $request->getHost() )) {
@@ -135,12 +135,14 @@ class LicenseController extends Controller
 	}
 
 	/**
+	 * @param string $productId
+	 * @param int $licenseId
 	 * @return void
 	 * @throws InvalidSoftwareException
 	 */
-	protected function attachLicenseToSoftware( $softwareSlug, $licenseId )
+	protected function attachLicenseToSoftware( $productId, $licenseId )
 	{
-		if( $software = app( Software::class )->where( 'slug', $softwareSlug )->first() ) {
+		if( $software = app( Software::class )->where( 'product_id', $productId )->first() ) {
 			$software->licenses()->attach( $licenseId );
 			return;
 		}
@@ -148,6 +150,7 @@ class LicenseController extends Controller
 	}
 
 	/**
+	 * @param bool $isTrashed
 	 * @return License
 	 */
 	protected function updateLicense( Request $request, array $data, $isTrashed = false )
@@ -176,10 +179,11 @@ class LicenseController extends Controller
 	}
 
 	/**
+	 * @param string $productId
 	 * @return bool
 	 */
-	protected function verifySoftware( License $license, $softwareSlug )
+	protected function verifySoftware( License $license, $productId )
 	{
-		return $license->hasSoftware( $softwareSlug );
+		return $license->hasSoftware( $productId );
 	}
 }

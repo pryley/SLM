@@ -25,7 +25,7 @@ $router->group( ['prefix' => 'v1'], function() use( $router ) {
 		$router->post( 'software', 'SoftwareController@store' );
 		$router->post( 'software/archive', 'SoftwareController@archive' );
 		$router->post( 'software/restore', 'SoftwareController@restore' );
-		$router->delete( 'software/{slug}', 'SoftwareController@destroy' );
+		$router->delete( 'software/{product_id}', 'SoftwareController@destroy' );
 		// licenses
 		$router->get( 'licenses', 'LicenseController@index' );
 		$router->post( 'licenses', 'LicenseController@store' );

@@ -28,6 +28,7 @@ class Software extends Model
 		'name',
 		'slug',
 		'repository',
+		'product_id',
 		'status',
 	];
 
@@ -45,13 +46,14 @@ class Software extends Model
 	 */
 	public $rules = [
 		'name' => 'required',
-		'slug' => 'required|alpha_dash|unique:software',
+		'slug' => 'required|alpha_dash',
 		'repository' => 'url',
+		'product_id' => 'required|unique:software',
 		'status' => 'in:active,archived',
 	];
 
 	/**
-	 * Get all of the domains for the license.
+	 * Get all of the updates for the software.
 	 */
 	public function updates()
 	{

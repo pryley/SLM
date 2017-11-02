@@ -16,6 +16,7 @@ class SoftwareTableSeeder extends Seeder
 			'name' => 'Site Reviews - Tripadvisor',
 			'slug' => 'site_reviews_tripadvisor',
 			'repository' => 'https://bitbucket.org/geminilabs/site-reviews-tripadvisor',
+			'product_id' => '13',
 			'status' => 'active',
 		]);
 	}

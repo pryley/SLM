@@ -22,7 +22,7 @@ class SoftwareController extends Controller
 	 */
 	public function archive( Request $request )
 	{
-		if( $software = app( License::class )->where( 'slug', $request->input( 'slug' ))->first() ) {
+		if( $software = app( License::class )->where( 'product_id', $request->input( 'product_id' ))->first() ) {
 			$software->status = 'archived';
 			$software->save();
 			$software->delete();
@@ -51,19 +51,20 @@ class SoftwareController extends Controller
 			'name' => $request->input( 'name' ),
 			'slug' => $request->input( 'slug' ),
 			'repository' => $request->input( 'repository' ),
+			'product_id' => $request->input( 'product_id' ),
 			'status' => 'active',
 		])->save();
 		return $this->respondWithItem( $software, $this->transformer );
 	}
 
 	/**
-	 * @param string $softwareId
+	 * @param string $productId
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws InvalidSoftwareException
 	 */
-	public function destroy( $softwareSlug )
+	public function destroy( $productId )
 	{
-		if( $software = app( Software::class )->withTrashed()->where( 'slug', $softwareSlug )->first() ) {
+		if( $software = app( Software::class )->withTrashed()->where( 'product_id', $productId )->first() ) {
 			$software->forceDelete();
 			$software->fireEvent( 'removed' );
 			return $this->sendCustomResponse( 204, 'Software deleted' );
@@ -79,7 +80,7 @@ class SoftwareController extends Controller
 	{
 		$software = app( License::class )
 			->onlyTrashed()
-			->where( 'slug', $request->input( 'slug' ))
+			->where( 'product_id', $request->input( 'product_id' ))
 			->first();
 		if( $software ) {
 			$software->status = 'active';

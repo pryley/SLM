@@ -26,7 +26,7 @@ class SLMCreateLicenseCommand extends Command
 		{--last-name : Enter the license owner\'s last name}
 		{--email : Enter the license owner\'s email}
 		{--company : Enter the license owner\'s company name (optional)}
-		{--software : Enter the software slug assigned to this license}
+		{--product-id : Enter the software product ID assigned to this license}
 		{--domains : Enter the maximum number of domains allowed for this license}
 		{--transaction-id : Enter the transaction ID for this license}';
 
@@ -49,7 +49,7 @@ class SLMCreateLicenseCommand extends Command
 		}
 		$request = new Request;
 		$request->merge([
-			'software' => $this->getLicenseSoftware(),
+			'product_id' => $this->getLicenseSoftware(),
 			'first_name' => $this->getLicenseFirstName(),
 			'last_name' => $this->getLicenseLastName(),
 			'email' => $this->getLicenseEmail(),
@@ -132,8 +132,8 @@ class SLMCreateLicenseCommand extends Command
 	protected function getLicenseSoftware()
 	{
 		$this->showSoftwareTable();
-		return $this->output->ask( 'Enter the software slug assigned to this license', null, function( $value ) {
-			return $this->validateInput( 'software', 'alpha_dash|exists:software,slug', $value );
+		return $this->output->ask( 'Enter the software product ID assigned to this license', null, function( $value ) {
+			return $this->validateInput( 'product-id', 'exists:software,product_id', $value );
 		});
 	}
 
@@ -153,7 +153,7 @@ class SLMCreateLicenseCommand extends Command
 	 */
 	protected function getSoftware()
 	{
-		$columns = ['name', 'slug', 'repository', 'status'];
+		$columns = ['name', 'slug', 'repository', 'product_id', 'status'];
 		return $this->software = app( Software::class )->get( $columns )->toArray();
 	}
 
@@ -162,7 +162,7 @@ class SLMCreateLicenseCommand extends Command
 	 */
 	protected function showSoftwareTable()
 	{
-		$this->table( ['name', 'slug', 'repository', 'status'], $this->software );
+		$this->table( ['name', 'slug', 'repository', 'product_id', 'status'], $this->software );
 	}
 
 	/**

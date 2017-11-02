@@ -13,6 +13,7 @@ class SoftwareTransformer extends TransformerAbstract
 			'archivedAt' => (string) $software->deleted_at,
 			'createdAt' => (string) $software->created_at,
 			'name' => (string) $software->name,
+			'productId' => (string) $software->product_id,
 			'repository' => (string) $software->repository,
 			'slug' => (string) $software->slug,
 			'status' => (string) $software->status,

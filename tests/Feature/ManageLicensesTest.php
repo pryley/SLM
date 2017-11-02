@@ -20,7 +20,7 @@ class ManageLicensesTest extends TestCase
 			'first_name' => 'Jane',
 			'last_name' => 'Doe',
 			'max_domains_allowed' => 1,
-			'software' => '',
+			'product_id' => '',
 			'transaction_id' => str_random( 32 ),
 		], $overrides );
 	}
@@ -29,7 +29,7 @@ class ManageLicensesTest extends TestCase
 	public function create_a_license()
 	{
 		$this->auth()->post( '/v1/licenses', $this->validParams([
-			'software' => factory( Software::class )->create()->slug,
+			'product_id' => factory( Software::class )->create()->product_id,
 		]))->seeJson([
 			'status' => 200,
 		]);
@@ -42,7 +42,7 @@ class ManageLicensesTest extends TestCase
 			'email' => '',
 			'first_name' => '',
 			'last_name' => '',
-			'software' => '',
+			'product_id' => '',
 			'transaction_id' => '',
 		]))->seeJson([
 			'status' => 422,
@@ -50,7 +50,7 @@ class ManageLicensesTest extends TestCase
 				'email' => ['The email field is required.'],
 				'first_name' => ['The first name field is required.'],
 				'last_name' => ['The last name field is required.'],
-				'software' => ['The software field is required.'],
+				'product_id' => ['The product id field is required.'],
 				'transaction_id' => ['The transaction id field is required.'],
 			],
 		]);
@@ -61,7 +61,7 @@ class ManageLicensesTest extends TestCase
 	{
 		$software = factory( Software::class )->create();
 		$this->auth()->post( '/v1/licenses', $this->validParams([
-			'software' => $software->slug,
+			'product_id' => $software->product_id,
 			'email' => 'invalid email',
 		]))->seeJson([
 			'status' => 422,
@@ -72,14 +72,14 @@ class ManageLicensesTest extends TestCase
 	}
 
 	/** @test */
-	public function software_field_must_exist_as_slug_in_software_table()
+	public function software_field_must_exist_as_product_id_in_software_table()
 	{
 		$this->auth()->post( '/v1/licenses', $this->validParams([
-			'software' => 'invalid_software_slug',
+			'product_id' => 'invalid_software_product_id',
 		]))->seeJson([
 			'status' => 422,
 			'errors' => (object) [
-				'software' => ['The selected software is invalid.']
+				'product_id' => ['The selected product id is invalid.']
 			],
 		]);
 	}
@@ -89,7 +89,7 @@ class ManageLicensesTest extends TestCase
 	{
 		$software = factory( Software::class )->create();
 		$data = $this->validParams([
-			'software' => $software->slug,
+			'product_id' => $software->product_id,
 			'transaction_id' => 'transaction_id',
 		]);
 		$this->auth()->post( '/v1/licenses', $data )->seeJson([
@@ -148,7 +148,7 @@ class ManageLicensesTest extends TestCase
 		$software->licenses()->attach( $license->id );
 		$this->post( '/v1/licenses/verify', [
 			'license_key' => $license->license_key,
-			'software' => $software->slug,
+			'product_id' => $software->product_id,
 		])->seeJson([
 			'status' => 200,
 		]);

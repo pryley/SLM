@@ -66,7 +66,7 @@ class License extends Model
 		'email' => 'required|email',
 		'first_name' => 'required',
 		'last_name' => 'required',
-		'software' => 'required|alpha_dash|exists:software,slug',
+		'product_id' => 'required|exists:software,product_id',
 		'transaction_id' => 'required|unique:licenses',
 	];
 
@@ -93,9 +93,9 @@ class License extends Model
 	 *
 	 * @return bool
 	 */
-	public function hasSoftware( $software )
+	public function hasSoftware( $productId )
 	{
-		return $this->software()->where( 'slug', $software )->first();
+		return $this->software()->where( 'product_id', $productId )->first();
 	}
 
 	/**

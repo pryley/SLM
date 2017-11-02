@@ -122,6 +122,7 @@ class ManageLicenseDomainsTest extends TestCase
 		$this->AssertTrue( $license->hasDomain( 'test.local' ));
 		$this->AssertTrue( $license->hasDomain( 'test.localhost' ));
 		$this->AssertTrue( $license->hasDomain( 'test.test' ));
+		$this->AssertTrue( $license->hasDomain( 'staging.test.test' ));
 		$this->AssertTrue( $license->hasDomain( 'staging.test.com' ));
 		$this->AssertTrue( $license->hasDomain( 'dev.test.com' ));
 
