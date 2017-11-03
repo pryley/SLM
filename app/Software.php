@@ -53,14 +53,6 @@ class Software extends Model
 	];
 
 	/**
-	 * Get all of the updates for the software.
-	 */
-	public function updates()
-	{
-		return $this->hasMany( Update::class, 'software_id' );
-	}
-
-	/**
 	 * Determine if the software has a license set.
 	 *
 	 * @return bool
@@ -76,5 +68,13 @@ class Software extends Model
 	public function licenses()
 	{
 		return $this->belongsToMany( License::class, 'software_licenses', 'software_id', 'license_id' );
+	}
+
+	/**
+	 * Get all of the updates for the software.
+	 */
+	public function updates()
+	{
+		return $this->hasMany( Update::class, 'software_id' );
 	}
 }

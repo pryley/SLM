@@ -20,7 +20,6 @@ class ManageLicensesTest extends TestCase
 			'first_name' => 'Jane',
 			'last_name' => 'Doe',
 			'max_domains_allowed' => 1,
-			'product_id' => '',
 			'transaction_id' => str_random( 32 ),
 		], $overrides );
 	}
@@ -50,7 +49,10 @@ class ManageLicensesTest extends TestCase
 				'email' => ['The email field is required.'],
 				'first_name' => ['The first name field is required.'],
 				'last_name' => ['The last name field is required.'],
-				'product_id' => ['The product id field is required.'],
+				'product_id' => ['The product id field is required when software is not present.'],
+				'software.name' => ['The software.name field is required when product id is not present.'],
+				'software.product_id' => ['The software.product id field is required when product id is not present.'],
+				'software.slug' => ['The software.slug field is required when product id is not present.'],
 				'transaction_id' => ['The transaction id field is required.'],
 			],
 		]);
@@ -81,6 +83,49 @@ class ManageLicensesTest extends TestCase
 			'errors' => (object) [
 				'product_id' => ['The selected product id is invalid.']
 			],
+		]);
+	}
+
+	/** @test */
+	public function software_fields_must_exist_in_license_request()
+	{
+		$software = factory( Software::class )->create();
+		$this->auth()->post( '/v1/licenses', $this->validParams([
+			'software' => '',
+		]))->seeJson([
+			'status' => 422,
+			'errors' => (object) [
+				'product_id' => ['The product id field is required when software is not present.'],
+				'software.name' => ['The software.name field is required when product id is not present.'],
+				'software.product_id' => ['The software.product id field is required when product id is not present.'],
+				'software.slug' => ['The software.slug field is required when product id is not present.'],
+			],
+		]);
+		$this->auth()->post( '/v1/licenses', $this->validParams([
+			'software' => [
+				'name' => 'Product',
+				'slug' => 'product',
+			],
+		]))->seeJson([
+			'status' => 422,
+			'errors' => (object) [
+				'software.product_id' => ['The software.product id field is required when product id is not present.'],
+			],
+		]);
+		$this->auth()->post( '/v1/licenses', $this->validParams([
+			'product_id' => $software->product_id,
+			'software' => '',
+		]))->seeJson([
+			'status' => 200,
+		]);
+		$this->auth()->post( '/v1/licenses', $this->validParams([
+			'software' => [
+				'name' => 'New Product',
+				'slug' => 'new-slug',
+				'product_id' => '13',
+			],
+		]))->seeJson([
+			'status' => 200,
 		]);
 	}
 

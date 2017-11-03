@@ -45,7 +45,7 @@ class LicenseController extends Controller
 			'status' => 'active',
 			'transaction_id' => $request->input( 'transaction_id' ),
 		])->save();
-		$this->attachLicenseToSoftware( $request->input( 'product_id' ), $license->id );
+		$this->attachLicenseToSoftware( $this->getSoftwareFromRequest( $request ), $license->id );
 		return $this->respondWithItem( $license, $this->transformer );
 	}
 
@@ -135,18 +135,26 @@ class LicenseController extends Controller
 	}
 
 	/**
-	 * @param string $productId
 	 * @param int $licenseId
 	 * @return void
-	 * @throws InvalidSoftwareException
 	 */
-	protected function attachLicenseToSoftware( $productId, $licenseId )
+	protected function attachLicenseToSoftware( Software $software, $licenseId )
 	{
-		if( $software = app( Software::class )->where( 'product_id', $productId )->first() ) {
-			$software->licenses()->attach( $licenseId );
-			return;
-		}
-		throw new InvalidSoftwareException;
+		$software->licenses()->attach( $licenseId );
+	}
+
+	/**
+	 * @return Software
+	 */
+	protected function getSoftwareFromRequest( Request $request )
+	{
+		return app( Software::class )->firstOrCreate([
+			'product_id' => $request->input( 'product_id', $request->input( 'software.product_id' ))
+		],[
+			'name' => $request->input( 'software.name' ),
+			'repository' => $request->input( 'software.repository' ),
+			'slug' => $request->input( 'software.slug' ),
+		]);
 	}
 
 	/**

@@ -17,7 +17,7 @@ class CreateSoftwareTable extends Migration
 			$table->increments( 'id' );
 			$table->string( 'name' );
 			$table->string( 'slug' );
-			$table->string( 'repository' );
+			$table->string( 'repository' )->nullable();
 			$table->string( 'product_id' )->unique()->index();
 			$table->string( 'status' );
 			$table->timestamps();
