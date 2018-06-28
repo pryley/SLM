@@ -126,10 +126,12 @@ class LicenseController extends Controller
 			throw new InvalidLicenseException( $license->status );
 		}
 		if( !$this->verifySoftware( $license, $request->input( 'product_id' ))) {
-			throw new InvalidSoftwareException;
+			throw new InvalidLicenseException( 'software' );
+			// throw new InvalidSoftwareException;
 		}
 		if( app()->environment( 'production' ) && !$license->hasDomain( $request->getHost() )) {
-			throw new InvalidDomainException;
+			// throw new InvalidDomainException;
+			throw new InvalidLicenseException( 'domain' );
 		}
 		return $this->respondWithItem( $license, $transformer );
 	}

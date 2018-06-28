@@ -26,6 +26,7 @@ class Handler extends ExceptionHandler
 		'AuthenticationException' => ['Unauthorized', 401],
 		'AuthorizationException' => ['Insufficient privileges to perform this action', 403],
 		'DomainExistsException' => ['Domain already exists', 403],
+		'DomainLicenseException' => ['License domain is invalid', 401],
 		'DomainLimitReachedException' => ['Domain limit reached for this license', 403],
 		'ExpiredLicenseException' => ['License has expired', 401],
 		'InvalidDomainException' => ['Domain is invalid', 401],
@@ -34,12 +35,12 @@ class Handler extends ExceptionHandler
 		'MethodNotAllowedHttpException' => ['Method Not Allowed', 405],
 		'NotFoundHttpException' => ['The requested resource was not found', 404],
 		'RevokedLicenseException' => ['License has been revoked', 401],
+		'SoftwareLicenseException' => ['License software is invalid', 401],
 		'ValidationException' => ['Validation failed', 422],
 	];
 
 	/**
 	 * A list of the exception types that should not be reported.
-	 *
 	 * @var array
 	 */
 	protected $dontReport = [
@@ -56,9 +57,7 @@ class Handler extends ExceptionHandler
 
 	/**
 	 * Report or log an exception.
-	 *
 	 * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-	 *
 	 * @return void
 	 */
 	public function report( Exception $e )
@@ -69,7 +68,6 @@ class Handler extends ExceptionHandler
 	/**
 	 * Render an exception into an HTTP response.
 	 * http://www.restapitutorial.com/httpstatuscodes.html
-	 *
 	 * @param \Illuminate\Http\Request $request
 	 * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
 	 */
