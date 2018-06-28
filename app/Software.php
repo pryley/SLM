@@ -26,7 +26,6 @@ class Software extends Model
 	 */
 	protected $fillable = [
 		'name',
-		'slug',
 		'repository',
 		'product_id',
 		'status',
@@ -46,9 +45,8 @@ class Software extends Model
 	 */
 	public $rules = [
 		'name' => 'required',
-		'slug' => 'required|alpha_dash',
 		'repository' => 'url',
-		'product_id' => 'required|unique:software',
+		'product_id' => 'required|alpha_dash|unique:software',
 		'status' => 'in:active,archived',
 	];
 

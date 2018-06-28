@@ -28,7 +28,7 @@ class SLMSoftwareCommand extends Command
 	 */
 	public function handle()
 	{
-		$columns = ['name', 'slug', 'repository', 'status'];
+		$columns = ['name', 'product_id', 'repository', 'status'];
 		if( count( $software = app( Software::class )->get( $columns )->toArray() ) > 0 ) {
 			return $this->table( $columns, $software );
 		}

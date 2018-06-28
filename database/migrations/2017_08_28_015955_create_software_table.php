@@ -16,9 +16,8 @@ class CreateSoftwareTable extends Migration
 		Schema::create( 'software', function( Blueprint $table ) {
 			$table->increments( 'id' );
 			$table->string( 'name' );
-			$table->string( 'slug' );
-			$table->string( 'repository' )->nullable();
 			$table->string( 'product_id' )->unique()->index();
+			$table->string( 'repository' )->nullable();
 			$table->string( 'status' );
 			$table->timestamps();
 			$table->softDeletes();

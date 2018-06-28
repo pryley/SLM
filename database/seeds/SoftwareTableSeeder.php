@@ -14,9 +14,8 @@ class SoftwareTableSeeder extends Seeder
 	{
 		factory( Software::class )->create([
 			'name' => 'Site Reviews - Tripadvisor',
-			'slug' => 'site_reviews_tripadvisor',
+			'product_id' => 'site-reviews-tripadvisor',
 			'repository' => 'https://bitbucket.org/geminilabs/site-reviews-tripadvisor',
-			'product_id' => '13',
 			'status' => 'active',
 		]);
 	}

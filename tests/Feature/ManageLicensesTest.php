@@ -52,7 +52,6 @@ class ManageLicensesTest extends TestCase
 				'product_id' => ['The product id field is required when software is not present.'],
 				'software.name' => ['The software.name field is required when product id is not present.'],
 				'software.product_id' => ['The software.product id field is required when product id is not present.'],
-				'software.slug' => ['The software.slug field is required when product id is not present.'],
 				'transaction_id' => ['The transaction id field is required.'],
 			],
 		]);
@@ -98,13 +97,11 @@ class ManageLicensesTest extends TestCase
 				'product_id' => ['The product id field is required when software is not present.'],
 				'software.name' => ['The software.name field is required when product id is not present.'],
 				'software.product_id' => ['The software.product id field is required when product id is not present.'],
-				'software.slug' => ['The software.slug field is required when product id is not present.'],
 			],
 		]);
 		$this->auth()->post( '/v1/licenses', $this->validParams([
 			'software' => [
 				'name' => 'Product',
-				'slug' => 'product',
 			],
 		]))->seeJson([
 			'status' => 422,
@@ -121,8 +118,7 @@ class ManageLicensesTest extends TestCase
 		$this->auth()->post( '/v1/licenses', $this->validParams([
 			'software' => [
 				'name' => 'New Product',
-				'slug' => 'new-slug',
-				'product_id' => '13',
+				'product_id' => 'new-product',
 			],
 		]))->seeJson([
 			'status' => 200,

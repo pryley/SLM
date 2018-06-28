@@ -49,7 +49,6 @@ class SoftwareController extends Controller
 		$this->validate( $request, $software->rules );
 		$software->fill([
 			'name' => $request->input( 'name' ),
-			'slug' => $request->input( 'slug' ),
 			'repository' => $request->input( 'repository' ),
 			'product_id' => $request->input( 'product_id' ),
 			'status' => 'active',

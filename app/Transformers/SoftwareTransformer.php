@@ -15,7 +15,6 @@ class SoftwareTransformer extends TransformerAbstract
 			'name' => (string) $software->name,
 			'productId' => (string) $software->product_id,
 			'repository' => (string) $software->repository,
-			'slug' => (string) $software->slug,
 			'status' => (string) $software->status,
 			'updatedAt' => (string) $software->updated_at,
 		];

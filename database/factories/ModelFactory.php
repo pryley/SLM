@@ -52,7 +52,6 @@ $factory->define( App\User::class, function( Faker\Generator $faker ) {
 $factory->define( App\Software::class, function( Faker\Generator $faker ) {
 	return [
 		'name' => $faker->company,
-		'slug' => $faker->slug,
 		'repository' => $faker->url,
 		'product_id' => str_random( 32 ),
 		'status' => 'active',

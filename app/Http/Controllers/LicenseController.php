@@ -153,7 +153,6 @@ class LicenseController extends Controller
 		],[
 			'name' => $request->input( 'software.name' ),
 			'repository' => $request->input( 'software.repository' ),
-			'slug' => $request->input( 'software.slug' ),
 		]);
 	}
 

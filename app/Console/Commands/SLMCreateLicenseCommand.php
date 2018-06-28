@@ -11,6 +11,8 @@ use Illuminate\Validation\ValidationException;
 
 class SLMCreateLicenseCommand extends Command
 {
+	const COLUMNS = ['name', 'product_id', 'status'];
+
 	/**
 	 * @var array
 	 */
@@ -22,13 +24,13 @@ class SLMCreateLicenseCommand extends Command
 	 * @var string
 	 */
 	protected $signature = 'slm:create-license
-		{--first-name : Enter the license owner\'s first name}
-		{--last-name : Enter the license owner\'s last name}
+		{--first_name : Enter the license owner\'s first name}
+		{--last_name : Enter the license owner\'s last name}
 		{--email : Enter the license owner\'s email}
 		{--company : Enter the license owner\'s company name (optional)}
-		{--product-id : Enter the software product ID assigned to this license}
+		{--product_id : Enter the software product ID assigned to this license}
 		{--domains : Enter the maximum number of domains allowed for this license}
-		{--transaction-id : Enter the transaction ID for this license}';
+		{--transaction_id : Enter the transaction ID for this license}';
 
 	/**
 	 * The console command description.
@@ -110,7 +112,7 @@ class SLMCreateLicenseCommand extends Command
 	protected function getLicenseFirstName()
 	{
 		return $this->output->ask( 'Enter the license owner\'s first name', null, function( $value ) {
-			return $this->validateInput( 'first-name', 'min:1', $value );
+			return $this->validateInput( 'first_name', 'min:1', $value );
 		});
 	}
 
@@ -121,7 +123,7 @@ class SLMCreateLicenseCommand extends Command
 	protected function getLicenseLastName()
 	{
 		return $this->output->ask( 'Enter the license owner\'s last name', null, function( $value ) {
-			return $this->validateInput( 'last-name', 'min:1', $value );
+			return $this->validateInput( 'last_name', 'min:1', $value );
 		});
 	}
 
@@ -144,7 +146,7 @@ class SLMCreateLicenseCommand extends Command
 	protected function getLicenseTransactionId()
 	{
 		return $this->output->ask( 'Enter the transaction ID for this license', null, function( $value ) {
-			return $this->validateInput( 'transaction-id', 'unique:licenses,transaction_id', $value );
+			return $this->validateInput( 'transaction_id', 'unique:licenses,transaction_id', $value );
 		});
 	}
 
@@ -153,8 +155,7 @@ class SLMCreateLicenseCommand extends Command
 	 */
 	protected function getSoftware()
 	{
-		$columns = ['name', 'slug', 'repository', 'product_id', 'status'];
-		return $this->software = app( Software::class )->get( $columns )->toArray();
+		return $this->software = app( Software::class )->get( static::COLUMNS )->toArray();
 	}
 
 	/**
@@ -162,7 +163,7 @@ class SLMCreateLicenseCommand extends Command
 	 */
 	protected function showSoftwareTable()
 	{
-		$this->table( ['name', 'slug', 'repository', 'product_id', 'status'], $this->software );
+		$this->table( static::COLUMNS, $this->software );
 	}
 
 	/**
