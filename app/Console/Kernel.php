@@ -18,33 +18,36 @@ use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-	/**
-	 * The Artisan commands provided by your application.
-	 *
-	 * @var array
-	 */
-	protected $commands = [
-		KeyGenerateCommand::class,
-		SLMAccessTokenCommand::class,
-		SLMClientsCommand::class,
-		SLMCreateDomainCommand::class,
-		SLMCreateLicenseCommand::class,
-		SLMCreateSoftwareCommand::class,
-		SLMCreateUserCommand::class,
-		SLMDomainsCommand::class,
-		SLMInstallCommand::class,
-		SLMSoftwareCommand::Class,
-		SLMUsersCommand::class,
-	];
+    /**
+     * The Artisan commands provided by your application.
+     *
+     * @var array
+     */
+    protected $commands = [
+        KeyGenerateCommand::class,
+        SLMAccessTokenCommand::class,
+        SLMClientsCommand::class,
+        SLMCreateDomainCommand::class,
+        SLMCreateLicenseCommand::class,
+        SLMCreateSoftwareCommand::class,
+        SLMCreateUserCommand::class,
+        SLMDomainsCommand::class,
+        SLMInstallCommand::class,
+        SLMSoftwareCommand::class,
+        SLMUsersCommand::class,
+    ];
 
-	/**
-	 * Define the application's command schedule.
-	 *
-	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-	 * @return void
-	 */
-	protected function schedule(Schedule $schedule)
-	{
-		//
-	}
+    public function bootstrap()
+    {
+    }
+
+    /**
+     * Define the application's command schedule.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @return void
+     */
+    protected function schedule(Schedule $schedule)
+    {
+    }
 }

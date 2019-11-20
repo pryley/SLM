@@ -11,37 +11,40 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-	use Authenticatable, Authorizable, HasApiTokens, SoftDeletes;
+    use Authenticatable;
+    use Authorizable;
+    use HasApiTokens;
+    use SoftDeletes;
 
-	const ADMIN_ROLE = 'ADMIN_USER';
-	const BASIC_ROLE = 'BASIC_USER';
+    const ADMIN_ROLE = 'ADMIN_USER';
+    const BASIC_ROLE = 'BASIC_USER';
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-		'email',
-		'password',
-		'role',
-		'uuid',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'email',
+        'password',
+        'role',
+        'uuid',
+    ];
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = [
-		'password',
-	];
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+    ];
 
-	/**
-	 * @var array
-	 */
-	public $rules = [
-		'email' => 'required|email|unique:users',
-		'password' => 'required|min:8',
-	];
+    /**
+     * @var array
+     */
+    public $rules = [
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:8',
+    ];
 }

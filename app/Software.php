@@ -55,9 +55,9 @@ class Software extends Model
 	 *
 	 * @return bool
 	 */
-	public function hasLicense( $license )
+    public function hasLicense($license)
 	{
-		return $this->licenses()->where( 'license_key', $license )->first();
+        return $this->licenses()->where('license_key', $license)->first();
 	}
 
 	/**
@@ -65,7 +65,7 @@ class Software extends Model
 	 */
 	public function licenses()
 	{
-		return $this->belongsToMany( License::class, 'software_licenses', 'software_id', 'license_id' );
+        return $this->belongsToMany(License::class, 'software_licenses', 'software_id', 'license_id');
 	}
 
 	/**
@@ -73,6 +73,6 @@ class Software extends Model
 	 */
 	public function updates()
 	{
-		return $this->hasMany( Update::class, 'software_id' );
+        return $this->hasMany(Update::class, 'software_id');
 	}
 }

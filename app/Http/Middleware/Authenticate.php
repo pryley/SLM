@@ -8,38 +8,38 @@ use Laravel\Passport\Http\Middleware\CheckClientCredentials;
 
 class Authenticate
 {
-	/**
-	 * The authentication guard factory instance.
-	 *
-	 * @var \Illuminate\Contracts\Auth\Factory
-	 */
-	protected $auth;
+    /**
+     * The authentication guard factory instance.
+     *
+     * @var \Illuminate\Contracts\Auth\Factory
+     */
+    protected $auth;
 
-	/**
-	 * Create a new middleware instance.
-	 *
-	 * @param \Illuminate\Contracts\Auth\Factory $auth
-	 * @return void
-	 */
-	public function __construct( Auth $auth )
-	{
-		$this->auth = $auth;
-	}
+    /**
+     * Create a new middleware instance.
+     *
+     * @param \Illuminate\Contracts\Auth\Factory $auth
+     * @return void
+     */
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
 
-	/**
-	 * Handle an incoming request.
-	 *
-	 * @param \Illuminate\Http\Request $request
-	 * @param \Closure $next
-	 * @param string|null $guard
-	 * @return mixed
-	 * @throws AuthenticationException
-	 */
-	public function handle( $request, Closure $next, $guard = null )
-	{
-		if( $this->auth->guard( $guard )->guest() ) {
-			app( CheckClientCredentials::class )->handle( $request, function(){} );
-		}
-		return $next( $request );
-	}
+    /**
+     * Handle an incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
+     * @param string|null $guard
+     * @return mixed
+     * @throws AuthenticationException
+     */
+    public function handle($request, Closure $next, $guard = null)
+    {
+        if ($this->auth->guard($guard)->guest()) {
+            app(CheckClientCredentials::class)->handle($request, function () {});
+        }
+        return $next($request);
+    }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\License;
-use App\Software;
 use App\Http\Controllers\DomainController;
 use App\Exceptions\DomainLimitReachedException;
 use Illuminate\Console\Command;
@@ -19,7 +17,6 @@ class SLMCreateDomainCommand extends Command
 
 	/**
 	 * The console command name.
-	 *
 	 * @var string
 	 */
 	protected $signature = 'slm:create-domain
@@ -28,36 +25,32 @@ class SLMCreateDomainCommand extends Command
 
 	/**
 	 * The console command description.
-	 *
 	 * @var string
 	 */
 	protected $description = 'Add a new domain to a license';
 
 	/**
 	 * Execute the console command.
-	 *
 	 * @return void
 	 */
-	public function handle( DomainController $controller )
+    public function handle(DomainController $controller)
 	{
-		$request = new Request;
+        $request = new Request();
 		$request->merge([
 			'license_key' => $this->getDomainLicense(),
 			'domain' => $this->getDomainUrl(),
 		]);
 		try {
-			$response = $controller->store( $request )->getData();
-			$this->line( sprintf( '<comment>Domain added to license: %s</comment>', $response->data->domain ));
+            $response = $controller->store($request)->getData();
+            $this->line(sprintf('<comment>Domain added to license: %s</comment>', $response->data->domain));
+        } catch (ValidationException $e) {
+            foreach ($e->validator->errors()->getMessages() as $key => $messages) {
+                foreach ($messages as $error) {
+                    $this->error($error);
 		}
-		catch( ValidationException $e ) {
-			foreach( $e->validator->errors()->getMessages() as $key => $messages ) {
-				foreach( $messages as $error ) {
-					$this->error( $error );
 				}
-			}
-		}
-		catch( DomainLimitReachedException $e ) {
-			$this->error( 'The domain limit has been reached for this license.' );
+        } catch (DomainLimitReachedException $e) {
+            $this->error('The domain limit has been reached for this license.');
 		}
 	}
 
@@ -67,8 +60,8 @@ class SLMCreateDomainCommand extends Command
 	 */
 	protected function getDomainLicense()
 	{
-		return $this->output->ask( 'Enter the license that you are assigning this domain to', null, function( $value ) {
-			return $this->validateInput( 'license', 'exists:licenses,license_key', $value );
+        return $this->output->ask('Enter the license that you are assigning this domain to', null, function ($value) {
+            return $this->validateInput('license', 'exists:licenses,license_key', $value);
 		});
 	}
 
@@ -90,14 +83,14 @@ class SLMCreateDomainCommand extends Command
 	 * @return string
 	 * @throws Exception
 	 */
-	protected function validateInput( $attribute, $validation, $value )
+    protected function validateInput($attribute, $validation, $value)
 	{
-		if( 0 === strlen( $value )) {
-			throw new \Exception( 'A value is required.' );
+        if (0 === strlen($value)) {
+            throw new \Exception('A value is required.');
 		}
-		$validator = app( 'validator' )->make( [$attribute => $value], [$attribute => $validation] );
-		if( $validator->fails() ) {
-			throw new \Exception( $validator->errors()->first( $attribute ));
+        $validator = app('validator')->make([$attribute => $value], [$attribute => $validation]);
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first($attribute));
 		}
 		return $value;
 	}

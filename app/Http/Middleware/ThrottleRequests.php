@@ -62,7 +62,7 @@ class ThrottleRequests
      */
     protected function resolveRequestSignature($request)
     {
-        return sha1( implode( '|', [
+        return sha1(implode('|', [
             $request->getHost(),
             $request->path(),
             $request->ip(),
@@ -105,7 +105,7 @@ class ThrottleRequests
             'X-RateLimit-Remaining' => $remainingAttempts,
         ];
 
-        if (! is_null($retryAfter)) {
+        if (!is_null($retryAfter)) {
             $headers['Retry-After'] = $retryAfter;
             $headers['X-RateLimit-Reset'] = Carbon::now()->getTimestamp() + $retryAfter;
         }
