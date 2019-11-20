@@ -129,7 +129,7 @@ class LicenseController extends Controller
 			throw new InvalidLicenseException( 'software' );
 			// throw new InvalidSoftwareException;
 		}
-		if( app()->environment( 'production' ) && !$license->hasDomain( $request->getHost() )) {
+		if( !$this->verifyDomain( $license, $request )) {
 			// throw new InvalidDomainException;
 			throw new InvalidLicenseException( 'domain' );
 		}
@@ -173,6 +173,20 @@ class LicenseController extends Controller
 		}
 		$license->save();
 		return $license;
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function verifyDomain( License $license, Request $request )
+	{
+		// @todo allow request with Bearer token to bypass this check
+		// $request->input( 'client_id' )
+		// $request->input( 'client_secret' )
+		if( app()->environment( 'production' ) && !$license->hasDomain( $request->getHost() )) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
