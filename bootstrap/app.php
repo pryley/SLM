@@ -48,7 +48,8 @@ $app->singleton(
 	App\Console\Kernel::class
 );
 
-$app->configure( 'cors' );
+$app->configure('auth');
+$app->configure('cors');
 
 /*
 |--------------------------------------------------------------------------

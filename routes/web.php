@@ -42,34 +42,4 @@ $router->group( ['prefix' => 'v1'], function() use( $router ) {
 		$router->get( 'users', 'UserController@index' );
 		$router->post( 'users', 'UserController@store' );
 	});
-	// oauth2 routes
-	// \Dusterio\LumenPassport\LumenPassport::routes( $router, [
-	// 	'prefix' => 'oauth',
-	// 	'middleware' => ['throttle:60,1'],
-	// ]);
-	$router->group([
-		'middleware' => ['throttle:60,1'],
-		'namespace' => '\Laravel\Passport\Http\Controllers',
-		'prefix' => 'oauth',
-	], function() use( $router ) {
-		// Register the routes for retrieving and issuing access tokens.
-		$router->post( '/token', 'AccessTokenController@issueToken' );
-		$router->group( ['middleware' => ['auth']], function() use( $router ) {
-			// Register the routes for retrieving and issuing access tokens.
-			$router->get( '/tokens', 'AuthorizedAccessTokenController@forUser' );
-			$router->delete( '/tokens/{token_id}', 'AuthorizedAccessTokenController@destroy' );
-			// Register the routes needed for refreshing transient tokens.
-			$router->post( '/token/refresh', 'TransientTokenController@refresh' );
-			// Register the routes needed for managing clients.
-			$router->get( '/clients', 'ClientController@forUser' );
-			$router->post( '/clients', 'ClientController@store' );
-			$router->put( '/clients/{client_id}', 'ClientController@update' );
-			$router->delete( '/clients/{client_id}', 'ClientController@destroy' );
-			// Register the routes needed for managing personal access tokens.
-			$router->get( '/scopes', 'ScopeController@all' );
-			$router->get( '/personal-access-tokens', 'PersonalAccessTokenController@forUser' );
-			$router->post( '/personal-access-tokens', 'PersonalAccessTokenController@store' );
-			$router->delete( '/personal-access-tokens/{token_id}', 'PersonalAccessTokenController@destroy' );
-		});
-	});
 });

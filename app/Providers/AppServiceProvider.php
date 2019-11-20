@@ -12,25 +12,29 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-	/**
-	 * Bootstrap any application services.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		Domain::observe( DomainObserver::class );
-		License::observe( LicenseObserver::class );
-		User::observe( UserObserver::class );
-	}
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Domain::observe(DomainObserver::class);
+        License::observe(LicenseObserver::class);
+        User::observe(UserObserver::class);
 
-	/**
-	 * Register any application services.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		//
-	}
+        \Dusterio\LumenPassport\LumenPassport::routes($this->app->router, [
+            'middleware' => ['throttle:60,1'],
+            'prefix' => 'v1/oauth',
+        ]);
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+    }
 }
