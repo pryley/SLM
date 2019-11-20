@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\License;
 use App\Software;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -20,7 +21,7 @@ class ManageLicensesTest extends TestCase
 			'first_name' => 'Jane',
 			'last_name' => 'Doe',
 			'max_domains_allowed' => 1,
-			'transaction_id' => str_random( 32 ),
+			'transaction_id' => Str::random( 32 ),
 		], $overrides );
 	}
 

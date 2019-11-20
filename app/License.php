@@ -168,6 +168,6 @@ class License extends Model
 	 */
 	protected function removeSuffixFromDomain( Host $host )
 	{
-		return substr( $host->getRegisterableDomain(), 0, -strlen( $host->getPublicSuffix() ));
+		return substr( $host->getRegistrableDomain(), 0, -strlen( $host->getPublicSuffix() ));
 	}
 }

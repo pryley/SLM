@@ -2,11 +2,9 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-try {
-	(new Dotenv\Dotenv(__DIR__.'/../'))->load();
-} catch (Dotenv\Exception\InvalidPathException $e) {
-	//
-}
+(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
+    dirname(__DIR__)
+))->bootstrap();
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +18,10 @@ try {
 */
 
 $app = new Laravel\Lumen\Application(
-	realpath(__DIR__.'/../')
+    dirname(__DIR__)
 );
 
 $app->withFacades();
-
 $app->withEloquent();
 
 /*
@@ -39,13 +36,13 @@ $app->withEloquent();
 */
 
 $app->singleton(
-	Illuminate\Contracts\Debug\ExceptionHandler::class,
-	App\Exceptions\Handler::class
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    App\Exceptions\Handler::class
 );
 
 $app->singleton(
-	Illuminate\Contracts\Console\Kernel::class,
-	App\Console\Kernel::class
+    Illuminate\Contracts\Console\Kernel::class,
+    App\Console\Kernel::class
 );
 
 $app->configure('auth');
@@ -63,13 +60,13 @@ $app->configure('cors');
 */
 
 $app->middleware([
-	Barryvdh\Cors\HandleCors::class,
+    Barryvdh\Cors\HandleCors::class,
 ]);
 
 $app->routeMiddleware([
-	'auth' => App\Http\Middleware\Authenticate::class,
-	// 'cors' => \Barryvdh\Cors\HandleCors::class,
-	'throttle' => App\Http\Middleware\ThrottleRequests::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
+    // 'cors' => \Barryvdh\Cors\HandleCors::class,
+    'throttle' => App\Http\Middleware\ThrottleRequests::class,
 ]);
 
 /*
@@ -83,14 +80,15 @@ $app->routeMiddleware([
 |
 */
 
-$app->register( App\Providers\AppServiceProvider::class );
-$app->register( App\Providers\AuthServiceProvider::class );
-$app->register( Barryvdh\Cors\LumenServiceProvider::class );
-$app->register( Laravel\Passport\PassportServiceProvider::class );
-$app->register( Dusterio\LumenPassport\PassportServiceProvider::class );
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Barryvdh\Cors\LumenServiceProvider::class);
+$app->register(Laravel\Passport\PassportServiceProvider::class);
+$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 
-if( $app->environment() !== 'production' ) {
-	$app->register( Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class );
+if ('production' !== $app->environment()) {
+    $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+    $app->register(Laravel\Tinker\TinkerServiceProvider::class);
 }
 /*
 |--------------------------------------------------------------------------
@@ -104,9 +102,9 @@ if( $app->environment() !== 'production' ) {
 */
 
 $app->router->group([
-	'namespace' => 'App\Http\Controllers'
+    'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-	require __DIR__.'/../routes/web.php';
+    require __DIR__.'/../routes/web.php';
 });
 
 return $app;

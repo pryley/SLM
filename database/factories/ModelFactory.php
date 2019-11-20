@@ -32,7 +32,7 @@ $factory->define( App\License::class, function( Faker\Generator $faker ) {
 		'email' => $faker->email,
 		'company_name' => $company,
 		'max_domains_allowed' => $max_domains_allowed,
-		'transaction_id' => str_random( 32 ),
+		'transaction_id' => Illuminate\Support\Str::random( 32 ),
 		'deleted_at' => $deleted_at,
 		'expires_at' => Carbon\Carbon::now()->addYear(),
 	];
@@ -53,7 +53,7 @@ $factory->define( App\Software::class, function( Faker\Generator $faker ) {
 	return [
 		'name' => $faker->company,
 		'repository' => $faker->url,
-		'product_id' => str_random( 32 ),
+		'product_id' => Illuminate\Support\Str::random( 32 ),
 		'status' => 'active',
 	];
 });
